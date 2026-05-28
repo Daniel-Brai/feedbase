@@ -89,6 +89,7 @@ test-cov:
 	@cd $(APP_DIR) && $(ACTIVATE) && mkdir -p coverage && pytest --benchmark-skip --cov=. --cov-report=html:coverage/htmlcov --cov-report=xml:coverage/coverage.xml
 
 release:
+	@git add .
 	@git commit -m "chore(release): $(VERSION)"
 	@git tag $(VERSION)
 ifeq ($(PUSH),true)
