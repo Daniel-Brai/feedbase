@@ -10,28 +10,28 @@ class TestNewArticleNotification(TestNotificationCase):
     notification_class = NewArticleNotification
 
     async def test_title_is_always_fresh_reads_waiting(self):
-        notification = NewArticleNotification(articles_count=3, feed_titles=["HN"])
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
         msg = notification.to_notification()
         self.assertEqual(msg.title, "Fresh reads waiting")
 
     async def test_body_uses_singular_article_for_one(self):
-        notification = NewArticleNotification(articles_count=1, feed_titles=["HN"])
+        notification = self.notification(articles_count=1, feed_titles=["HN"])
         msg = notification.to_notification()
         self.assertIn("1 new article", msg.body)
         self.assertNotIn("articles", msg.body)
 
     async def test_body_uses_plural_articles_for_many(self):
-        notification = NewArticleNotification(articles_count=5, feed_titles=["HN"])
+        notification = self.notification(articles_count=5, feed_titles=["HN"])
         msg = notification.to_notification()
         self.assertIn("5 new articles", msg.body)
 
     async def test_body_shows_single_feed_title(self):
-        notification = NewArticleNotification(articles_count=2, feed_titles=["Hacker News"])
+        notification = self.notification(articles_count=2, feed_titles=["Hacker News"])
         msg = notification.to_notification()
         self.assertIn("Hacker News", msg.body)
 
     async def test_body_shows_two_feed_titles_without_truncation(self):
-        notification = NewArticleNotification(
+        notification = self.notification(
             articles_count=3,
             feed_titles=["Hacker News", "TechCrunch"],
         )
@@ -41,7 +41,7 @@ class TestNewArticleNotification(TestNotificationCase):
         self.assertNotIn("more", msg.body)
 
     async def test_body_truncates_more_than_two_feeds(self):
-        notification = NewArticleNotification(
+        notification = self.notification(
             articles_count=10,
             feed_titles=["HN", "TC", "Ars Technica", "The Verge"],
         )
@@ -53,7 +53,7 @@ class TestNewArticleNotification(TestNotificationCase):
         self.assertNotIn("The Verge", msg.body)
 
     async def test_body_truncates_exactly_three_feeds(self):
-        notification = NewArticleNotification(
+        notification = self.notification(
             articles_count=3,
             feed_titles=["A", "B", "C"],
         )
@@ -61,16 +61,16 @@ class TestNewArticleNotification(TestNotificationCase):
         self.assertIn("1 more", msg.body)
 
     async def test_serialisable_params_contains_articles_count(self):
-        notification = NewArticleNotification(articles_count=7, feed_titles=["HN"])
+        notification = self.notification(articles_count=7, feed_titles=["HN"])
         self.assert_params_contain(notification, articles_count=7)
 
     async def test_serialisable_params_contains_feed_titles(self):
         titles = ["HN", "TC"]
-        notification = NewArticleNotification(articles_count=2, feed_titles=titles)
+        notification = self.notification(articles_count=2, feed_titles=titles)
         self.assert_params_contain(notification, feed_titles=titles)
 
     async def test_from_params_roundtrip(self):
-        notification = NewArticleNotification(
+        notification = self.notification(
             articles_count=4,
             feed_titles=["HN", "TC", "Ars"],
         )
@@ -78,7 +78,7 @@ class TestNewArticleNotification(TestNotificationCase):
 
     async def test_deliver_calls_web_push_when_guard_passes(self):
         recipient = self.make_recipient(preferences={"allow_push_notifications": True})
-        notification = NewArticleNotification(articles_count=3, feed_titles=["HN"])
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
 
         with captured_transports(WebPushTransport) as delivered:
             await notification.deliver(recipient)
@@ -87,7 +87,7 @@ class TestNewArticleNotification(TestNotificationCase):
 
     async def test_deliver_skips_web_push_when_guard_fails(self):
         recipient = self.make_recipient(preferences={"allow_push_notifications": False})
-        notification = NewArticleNotification(articles_count=3, feed_titles=["HN"])
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
 
         with captured_transports(WebPushTransport) as delivered:
             await notification.deliver(recipient)
@@ -96,7 +96,7 @@ class TestNewArticleNotification(TestNotificationCase):
 
     async def test_deliver_skips_web_push_when_preference_absent(self):
         recipient = self.make_recipient(preferences={})
-        notification = NewArticleNotification(articles_count=1, feed_titles=["HN"])
+        notification = self.notification(articles_count=1, feed_titles=["HN"])
 
         with captured_transports(WebPushTransport) as delivered:
             await notification.deliver(recipient)
@@ -105,7 +105,7 @@ class TestNewArticleNotification(TestNotificationCase):
 
     async def test_deliver_to_multiple_recipients(self):
         recipients = [self.make_recipient(id=i, preferences={"allow_push_notifications": True}) for i in range(3)]
-        notification = NewArticleNotification(articles_count=5, feed_titles=["HN"])
+        notification = self.notification(articles_count=5, feed_titles=["HN"])
 
         with captured_transports(WebPushTransport) as delivered:
             await notification.deliver(recipients)
@@ -114,7 +114,7 @@ class TestNewArticleNotification(TestNotificationCase):
 
     async def test_message_passed_to_transport_has_correct_title(self):
         recipient = self.make_recipient(preferences={"allow_push_notifications": True})
-        notification = NewArticleNotification(articles_count=2, feed_titles=["HN"])
+        notification = self.notification(articles_count=2, feed_titles=["HN"])
 
         with captured_transports(WebPushTransport) as delivered:
             await notification.deliver(recipient)
@@ -125,10 +125,10 @@ class TestNewArticleNotification(TestNotificationCase):
         from lib.notifications.jobs import DeliverNotificationJob
 
         recipient = self.make_recipient()
-        notif = NewArticleNotification(articles_count=3, feed_titles=["HN"])
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
 
         with patch.object(DeliverNotificationJob, "perform_later") as mock_later:
-            notif.deliver_later(recipient)
+            notification.deliver_later(recipient)
 
         mock_later.assert_called_once()
 
@@ -136,7 +136,7 @@ class TestNewArticleNotification(TestNotificationCase):
         from lib.notifications.jobs import DeliverNotificationJob
 
         recipient = self.make_recipient()
-        notification = NewArticleNotification(articles_count=3, feed_titles=["HN"])
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
 
         with patch.object(DeliverNotificationJob, "perform_later") as mock_later:
             notification.deliver_later(recipient)
@@ -148,7 +148,7 @@ class TestNewArticleNotification(TestNotificationCase):
         from lib.notifications.jobs import DeliverNotificationJob
 
         recipient = self.make_recipient()
-        notification = NewArticleNotification(articles_count=5, feed_titles=["HN", "TC"])
+        notification = self.notification(articles_count=5, feed_titles=["HN", "TC"])
 
         with patch.object(DeliverNotificationJob, "perform_later") as mock_later:
             notification.deliver_later(recipient)
