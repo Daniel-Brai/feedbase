@@ -6,6 +6,7 @@ services:
             - .env
         restart: unless-stopped
         environment:
+            - APP_ENVIRONMENT=${APP_ENVIRONMENT:-production}
             - APP_DOMAIN=${APP_DOMAIN:-localhost}
             - APP_PORT=${APP_PORT:-5555}
             - APP_POSTGRES_HOST=${APP_POSTGRES_HOST:-postgres}
