@@ -6,8 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
-## Unreleased
+## [0.1.0-alpha.1](https://github.com/Daniel-Brai/feedbase/releases/tag/0.1.0-alpha.1) - 2026-05-28
 
-<small>[Compare with latest](https://github.com/Daniel-Brai/feedbase/compare/dc49cfae8f8a147be878b831e687c44a7b471ce2...HEAD)</small>
+<small>[Compare with first commit](https://github.com/Daniel-Brai/feedbase/compare/f26daa8220597b482f9aa0d348be03c06e9e96f8...0.1.0-alpha.1)</small>
 
-<!-- insertion marker -->
