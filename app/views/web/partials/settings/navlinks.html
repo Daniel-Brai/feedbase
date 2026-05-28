@@ -1,0 +1,45 @@
+{# typja:var _t: Callable[[str], str] #}
+
+<button
+    type="button"
+    class="fb-settings-tab-btn fb-settings-sidebar-btn"
+    :class="{ 'active': activeTab === 'account' }"
+    title="{{ _t('settings.account') }}"
+    @click.prevent="activeTab = 'account'"
+>
+    <i class="f7-icons fb-text-lg">person_circle</i>
+    <span>{{ _t('settings.account') }}</span>
+</button>
+
+<button
+    type="button"
+    class="fb-settings-tab-btn fb-settings-sidebar-btn"
+    :class="{ 'active': activeTab === 'fever' }"
+    title="{{ _t('settings.fever') }}"
+    @click.prevent="activeTab = 'fever'"
+>
+    <i class="f7-icons fb-text-lg">flame</i>
+    <span>{{ _t('settings.fever') }}</span>
+</button>
+
+<button
+    type="button"
+    class="fb-settings-tab-btn fb-settings-sidebar-btn"
+    :class="{ 'active': activeTab === 'opml' }"
+    title="{{ _t('settings.opml') }}"
+    @click.prevent="activeTab = 'opml'"
+>
+    <i class="f7-icons fb-text-lg">cloud_upload</i>
+    <span>{{ _t('settings.opml') }}</span>
+</button>
+
+<button
+    type="button"
+    class="fb-settings-tab-btn fb-settings-sidebar-btn"
+    :class="{ 'active': activeTab === 'preferences' }"
+    title="{{ _t('settings.preferences') }}"
+    @click.prevent="activeTab = 'preferences'"
+>
+    <i class="f7-icons fb-text-lg">square_list</i>
+    <span>{{ _t('settings.preferences') }}</span>
+</button>

@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+
+from bootstrap.jobs import configure_jobs
+from lib.logger import get_logger
+
+configure_jobs()
+
+
+logger = get_logger("bin.run_scheduler")
+
+
+def main() -> None:
+
+    from lib.jobs import get_adapter, get_adapter_name
+
+    adapter_name = get_adapter_name()
+
+    if adapter_name != "celery":
+        logger.error(
+            f"Current job adapter is '{adapter_name}'. run_scheduler is only needed for the 'celery' adapter."
+        )
+        sys.exit(1)
+
+    adapter = get_adapter()
+
+    if not getattr(adapter, "is_beat_enabled", False):
+        logger.error(
+            "Celery adapter is configured without beat support. run_scheduler requires use_beat=True."
+        )
+        sys.exit(1)
+
+    celery_app = adapter.start()
+    celery_app.start(["beat", "--loglevel=info", "--pidfile="])
+
+
+if __name__ == "__main__":
+    main()

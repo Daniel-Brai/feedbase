@@ -1,0 +1,216 @@
+services:
+    app:
+        container_name: feedbase_app
+        build: .
+        env_file:
+            - .env
+        restart: unless-stopped
+        environment:
+            - APP_DOMAIN=${APP_DOMAIN:-localhost}
+            - APP_PORT=${APP_PORT:-5555}
+            - APP_POSTGRES_HOST=${APP_POSTGRES_HOST:-postgres}
+            - APP_POSTGRES_PORT=${APP_POSTGRES_PORT:-5432}
+            - APP_POSTGRES_USER=${APP_POSTGRES_USER}
+            - APP_POSTGRES_PASSWORD=${APP_POSTGRES_PASSWORD}
+            - APP_POSTGRES_DB=${APP_POSTGRES_DB}
+            - APP_REDIS_HOST=${APP_REDIS_HOST:-redis}
+            - APP_REDIS_PORT=${APP_REDIS_PORT:-6379}
+            - APP_REDIS_PASSWORD=${APP_REDIS_PASSWORD:-}
+        ports:
+            - "${APP_PORT:-5555}:${APP_PORT:-5555}"
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.50"
+                    memory: 768M
+                reservations:
+                    cpus: "0.25"
+                    memory: 512M
+        depends_on:
+            - traefik
+            - postgres
+            - redis
+        networks:
+            - feedbase_network
+
+    traefik:
+        container_name: feedbase_traefik
+        build:
+            context: ./infra/traefik
+            dockerfile: Dockerfile
+        user: root
+        env_file:
+            - .env
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.25"
+                    memory: 384M
+                reservations:
+                    cpus: "0.20"
+                    memory: 256M
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:rw,Z
+        networks:
+            - feedbase_network
+
+    postgres:
+        container_name: feedbase_postgres
+        image: postgres:18-bookworm
+        restart: always
+        shm_size: 128mb
+        ports:
+            - "5433:5432"
+        environment:
+            - POSTGRES_USER=${APP_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${APP_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${APP_POSTGRES_DB}
+        volumes:
+            - postgres_data:/var/lib/postgresql/18/docker
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.50"
+                    memory: 768M
+                reservations:
+                    cpus: "0.25"
+                    memory: 512M
+        networks:
+            - feedbase_network
+
+    redis:
+        container_name: feedbase_redis
+        image: redis:8.2-bookworm
+        restart: always
+        ports:
+            - "${APP_REDIS_PORT:-6379}:6379"
+        command: >
+            sh -c "if [ -n '${APP_REDIS_PASSWORD}' ];
+            then redis-server --requirepass ${APP_REDIS_PASSWORD};
+            else redis-server;
+            fi"
+        volumes:
+            - redis_data:/data
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.30"
+                    memory: 512M
+                reservations:
+                    cpus: "0.20"
+                    memory: 256M
+        networks:
+            - feedbase_network
+
+    prometheus:
+        container_name: feedbase_prometheus
+        image: prom/prometheus:latest
+        user: root
+        profiles:
+            - monitoring
+        volumes:
+            - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro,Z
+            - prometheus_data:/prometheus
+        ports:
+            - "9090:9090"
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.25"
+                    memory: 512M
+                reservations:
+                    cpus: "0.15"
+                    memory: 256M
+        networks:
+            - feedbase_network
+
+    loki:
+        container_name: feedbase_loki
+        image: grafana/loki:latest
+        profiles:
+            - monitoring
+        ports:
+            - "3100:3100"
+        command: -config.file=/etc/loki/local-config.yaml
+        volumes:
+            - loki_data:/loki
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.25"
+                    memory: 512M
+                reservations:
+                    cpus: "0.15"
+                    memory: 256M
+        networks:
+            - feedbase_network
+
+    promtail:
+        container_name: feedbase_promtail
+        image: grafana/promtail:latest
+        user: root
+        profiles:
+            - monitoring
+        security_opt:
+            - label:disable
+        volumes:
+            - ./infra/promtail/config.yml:/etc/promtail/config.yml:ro,Z
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: -config.file=/etc/promtail/config.yml
+        depends_on:
+            - loki
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.20"
+                    memory: 256M
+                reservations:
+                    cpus: "0.10"
+                    memory: 128M
+        networks:
+            - feedbase_network
+
+    grafana:
+        container_name: feedbase_grafana
+        image: grafana/grafana:latest
+        user: root
+        profiles:
+            - monitoring
+        ports:
+            - "3000:3000"
+        environment:
+            - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USERNAME:-Adminstrator}
+            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-Password@123}
+            - GF_SECURITY_ADMIN_EMAIL=${GRAFANA_ADMIN_EMAIL:-admin@feedbase.app}
+        volumes:
+            - ./infra/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+            - ./infra/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+            - grafana_data:/var/lib/grafana
+        depends_on:
+            - prometheus
+            - loki
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.25"
+                    memory: 512M
+                reservations:
+                    cpus: "0.15"
+                    memory: 256M
+        networks:
+            - feedbase_network
+
+networks:
+    feedbase_network:
+        name: feedbase_network
+        driver: bridge
+
+volumes:
+    postgres_data:
+    redis_data:
+    prometheus_data:
+    loki_data:
+    grafana_data:

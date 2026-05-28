@@ -1,0 +1,132 @@
+{# typja:var notifications: dict[str, str], data: dict[str, Any], _t: Callable[[str], str] #}
+
+<div class="fb-sidebar-top">
+    <div id="discover-feed-form-container">
+        {{ render_form_cancel_restore(form_name=data.forms.discover_feed_form) }}
+    </div>
+</div>
+
+<div
+    class="fb-sidebar-middle"
+    x-data="window.ArticleStats('{{ data.urls.article_stats_url }}')"
+    x-init="init()"
+>
+    <div class="fb-sidebar-section">{{ _t('sidebar.views') }}</div>
+
+    <div x-show="loading" class="fb-sidebar-stats-loading">
+        <div>
+            {{ render_block("components/loading-indicator/loading-indicator.html", type="minimal") }}
+        </div>
+    </div>
+
+    <div x-show="!loading && error">
+        <div class="fb-sidebar-stats-error" x-text="error"></div>
+    </div>
+
+    <div x-show="!loading && !error">
+        <div
+            class="fb-sidebar-item"
+            :class="{ 'active': selectedView === 'all' }"
+            @click.stop.prevent="selectView('all', '{{ _t('sidebar.all_articles') }}', {})"
+        >
+            <i class="f7-icons">square_stack</i>
+            <span class="fb-sidebar-item-label"
+                >{{ _t('sidebar.all_articles') }}</span
+            >
+            <span
+                class="fb-sidebar-item-badge"
+                x-text="format(stats.total)"
+            ></span>
+        </div>
+        <div
+            class="fb-sidebar-item"
+            :class="{ 'active': selectedView === 'unread' }"
+            @click.stop.prevent='selectView("unread", "{{ _t("sidebar.unread") }}", { statuses__is_read: false })'
+        >
+            <i class="f7-icons">circle_lefthalf_fill</i>
+            <span class="fb-sidebar-item-label"
+                >{{ _t('sidebar.unread') }}</span
+            >
+            <span
+                class="fb-sidebar-item-badge"
+                x-text="format(stats.unread)"
+            ></span>
+        </div>
+        <div
+            class="fb-sidebar-item"
+            :class="{ 'active': selectedView === 'starred' }"
+            @click.stop.prevent='selectView("starred", "{{ _t("sidebar.starred") }}", { statuses__is_starred: true })'
+        >
+            <i class="f7-icons">star</i>
+            <span class="fb-sidebar-item-label"
+                >{{ _t('sidebar.starred') }}</span
+            >
+            <span
+                class="fb-sidebar-item-badge"
+                x-text="format(stats.starred)"
+            ></span>
+        </div>
+        <div
+            class="fb-sidebar-item"
+            :class="{ 'active': selectedView === 'bookmarked' }"
+            @click.stop.prevent='selectView("bookmarked", "{{ _t("sidebar.bookmarks") }}", { statuses__is_bookmarked: true })'
+        >
+            <i class="f7-icons">bookmark</i>
+            <span class="fb-sidebar-item-label"
+                >{{ _t('sidebar.bookmarks') }}</span
+            >
+            <span
+                class="fb-sidebar-item-badge"
+                x-text="format(stats.bookmarked)"
+            ></span>
+        </div>
+        <div
+            class="fb-sidebar-item"
+            :class="{ 'active': selectedView === 'today' }"
+            @click.stop.prevent='selectView("today", "{{ _t("sidebar.today") }}", { published_at__gte: window.DateTimeUtils.todayIso() })'
+        >
+            <i class="f7-icons">calendar_today</i>
+            <span class="fb-sidebar-item-label">{{ _t('sidebar.today') }}</span>
+            <span
+                class="fb-sidebar-item-badge"
+                x-text="format(stats.today)"
+            ></span>
+        </div>
+    </div>
+</div>
+
+<div class="fb-sidebar-bottom">
+    <div id="add-folder-form-container">
+        {{ render_form_cancel_restore(form_name=data.forms.add_folder_form) }}
+    </div>
+
+    {{ render_block("partials/lists/subscriptions_list.html",
+        notification_stream_url=notifications.stream_url,
+        subscriptions_url=data.urls.subscriptions_url,
+        folders_url=data.urls.folders_url,
+        subscription_update_url=data.urls.subscription_edit_url,
+        edit_folder_form_url=data.form_urls.edit_folder_form_url,
+        delete_folder_form_url=data.form_urls.delete_folder_form_url,
+        rename_subscription_form_url=data.form_urls.rename_subscription_form_url,
+        subscription_delete_url=data.urls.subscription_delete_url) 
+    }}
+
+    <div class="fb-sidebar-account-actions fb-mt-4">
+        <a
+            class="fb-btn fb-btn-ghost fb-w-full fb-flex fb-items-center fb-justify-between"
+            href="{{ data.urls.settings_url }}"
+            hx-get="{{ data.urls.settings_url }}"
+            preload="mouseover"
+            hx-target="body"
+            hx-boost="true"
+            hx-push-url="true"
+        >
+            <span class="fb-flex fb-items-center fb-gap-2">
+                <i class="f7-icons">gear</i>
+                {{ _t('settings.label') }}
+            </span>
+        </a>
+
+        {{ render_block("components/form/form.html", form=data.forms.logout_form) }}
+    </div>
+</div>

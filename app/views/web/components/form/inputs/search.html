@@ -1,0 +1,42 @@
+{% extends "components/form/inputs/_input.html" %}
+
+{% block input %}
+<div class="fb-search" x-data="{ value: '{{ field.value | default('') }}' }">
+    <i class="f7-icons">search</i>
+    <input
+        x-ref="input"
+        type="text"
+        id="{{ form.name }}-{{ field.name }}"
+        name="{{ field.name }}"
+        class="{% if field.css %}{{ field.css }}{% endif %}"
+        x-model="value"
+        value="{{ field.value | default('') }}"
+        placeholder="{{ field.placeholder | default('Search...') | _t }}"
+        {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %}
+        {% if field.minlength %}minlength="{{ field.minlength }}"{% endif %}
+        {% if field.maxlength %}maxlength="{{ field.maxlength }}"{% endif %}
+        {% if field.required %}required{% endif %}
+        {% if field.disabled %}disabled{% endif %}
+        {% if 'hx-post' in field %}
+        hx-post="{{ field['hx-post'] }}"
+        hx-trigger="{{ field['hx-trigger'] }}"
+        hx-target="{{ field['hx-target'] }}"
+        hx-swap="{{ field['hx-swap'] }}"
+        hx-include="{{ field['hx-include'] }}"
+        {% endif %}
+        {% if 'data-enable-on-changed-value' in field %}
+        data-enable-on-changed-value="{{ field['data-enable-on-changed-value'] }}"
+        {% endif %}
+    />
+
+    <button
+        type="button"
+        class="fb-search-clear"
+        x-show="value"
+        @click="value = ''; $nextTick(() => $refs.input.focus())"
+        x-cloak
+    >
+        <i class="f7-icons fb-text-lg">close</i>
+    </button>
+</div>
+{% endblock %}

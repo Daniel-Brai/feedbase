@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+
+from lib.database import run_migrations as _run_migrations
+from settings import settings
+
+if __name__ == "__main__":
+    _run_migrations(
+        database_url=str(settings.APP_SQLALCHEMY_DATABASE_SYNC_URI),
+        alembic_ini_path=BASE_DIR / "alembic.ini",
+    )

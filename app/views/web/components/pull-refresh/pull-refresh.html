@@ -1,0 +1,21 @@
+<div
+    x-data="window.PullRefresh({ enabled: window.MobileUtils?.isMobile() })"
+    x-init="init()"
+    x-cloak
+    class="fb-pull-refresh"
+>
+    <div
+        class="fb-pull-refresh-indicator"
+        :class="{ 'active': pulling || refreshing }"
+        :style="indicatorStyle"
+        role="status"
+        aria-live="polite"
+    >
+        <i
+            class="f7-icons fb-text-xl"
+            :class="{ 'fb-animate-spin': refreshing }"
+            x-text="iconName"
+            aria-hidden="true"
+        ></i>
+    </div>
+</div>

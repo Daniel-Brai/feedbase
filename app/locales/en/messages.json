@@ -1,0 +1,226 @@
+{
+    "appbar": {
+        "feeds": "Feeds",
+        "reader": "Reader",
+        "articles": "Articles"
+    },
+    "settings": {
+        "label": "Settings",
+        "account": "Account",
+        "opml": "OPML",
+        "fever": "Fever",
+        "preferences": "Preferences",
+        "back": "Back",
+        "account_title": "Your Account",
+        "account_description": "Manage your account settings here.",
+        "profile_title": "Profile",
+        "profile_description": "Your account details and display preferences",
+        "password_title": "Password",
+        "password_description": "Update your password.",
+        "change_email_title": "Change Email",
+        "change_email_description": "Update your email address.",
+        "preferences_title": "Preferences",
+        "preferences_description": "Update your display and reading preferences.",
+        "fever_title": "Fever API",
+        "fever_description": "Manage your Fever API settings here.",
+        "fever_key_label": "Fever API key",
+        "fever_key_hint": "Use this key with Fever-compatible clients at {fever_endpoint} and {docs_endpoint} for usage details.",
+        "fever_copy_key": "Copy key",
+        "fever_copy_success": "Fever key copied to clipboard",
+        "fever_toggle_visibility": "Toggle key visibility",
+        "fever_key_not_available": "Your Fever API key is not available.",
+        "opml_title": "OPML",
+        "opml_description": "Import or export your subscriptions using OPML files.",
+        "opml_export_title": "Export",
+        "opml_export_description": "Download your current subscriptions as an OPML file. Compatible with all major RSS readers.",
+        "opml_import_title": "Import",
+        "opml_import_description": "Upload an OPML file to import your subscriptions.",
+        "notifications": "Notifications",
+        "subscriptions": "Subscriptions"
+    },
+    "keyboard_shortcuts": {
+        "label": "Keyboard Shortcuts",
+        "navigation": {
+            "title": "Navigation",
+            "next_prev_article": "Next / prev article",
+            "next_prev_feed": "Next / prev feed",
+            "scroll_to_top": "Scroll to top",
+            "home": "Home",
+            "settings": "Settings",
+            "scroll_to_bottom": "Scroll to bottom"
+        },
+        "go_to": {
+            "title": "Go-To",
+            "all_articles": "All articles",
+            "starred": "Starred",
+            "bookmarks": "Bookmarks",
+            "unread": "Unread",
+            "today": "Today"
+        },
+        "actions": {
+            "title": "Actions",
+            "toggle_read": "Toggle read",
+            "toggle_star": "Toggle star",
+            "bookmark": "Bookmark",
+            "open_original_url": "Open Original URL",
+            "copy_original_url": "Copy Original URL",
+            "unsubscribe_feed": "Unsubscribe feed"
+        },
+        "ui": {
+            "title": "UI",
+            "add_feed": "Add feed",
+            "search": "Search",
+            "next_prev_result": "Next / prev result",
+            "this_overlay": "This overlay",
+            "close_back": "Close / back"
+        },
+        "messages": {
+            "no_selected_article_toggle_read": "No selected article available to toggle read.",
+            "article_marked_as_unread": "Article marked as unread.",
+            "article_marked_as_read": "Article marked as read.",
+            "unable_to_toggle_read_status": "Unable to toggle read status.",
+            "no_selected_article_to_star": "No selected article available to star.",
+            "no_selected_article_to_bookmark": "No selected article available to bookmark.",
+            "no_article_url_to_open": "No article URL available to open.",
+            "no_article_url_to_copy": "No article URL available to copy.",
+            "article_url_copied": "Article URL copied to clipboard.",
+            "unable_to_copy_article_url": "Unable to copy the article URL.",
+            "no_feed_selected_to_unsubscribe": "No feed selected to unsubscribe.",
+            "unable_to_find_feed_in_sidebar": "Unable to find feed in sidebar.",
+            "unable_to_open_feed_actions": "Unable to open feed actions."
+        }
+    },
+    "sidebar": {
+        "feeds": "Feeds",
+        "feed_actions": "Feed actions",
+        "views": "Views",
+        "all_articles": "All articles",
+        "unread": "Unread",
+        "starred": "Starred",
+        "bookmarks": "Bookmarks",
+        "today": "Today",
+        "new_folder": "New folder",
+        "add_new_folder": "Add new folder",
+        "rename_folder": "Rename Folder",
+        "delete_folder": "Delete Folder",
+        "folder_actions": "Folder actions",
+        "move_to_folder": "Move to Folder",
+        "move_to_folder_success": "Feed moved to folder successfully.",
+        "move_to_folder_error": "Unable to move feed to folder.",
+        "rename_subscription": "Rename",
+        "copy_feed_url": "Copy Feed URL",
+        "open_feed_url": "Open Feed URL",
+        "unsubscribe": "Unsubscribe",
+        "rename_feed": "Rename Feed",
+        "copy_feed_url_success": "Feed URL copied to clipboard",
+        "copy_feed_url_error": "Unable to copy feed URL",
+        "no_subscriptions": "No subscriptions found",
+        "add_feed": "Add a feed to start reading.",
+        "unsubscribe_success": "Subscription removed successfully.",
+        "unsubscribe_error": "Unable to unsubscribe. Please try again.",
+        "error": "Error",
+        "error_loading_subscriptions": "Unable to load subscriptions",
+        "retry": "Retry"
+    },
+    "articles": {
+        "no_articles": "No articles found",
+        "no_articles_hint": "Try a different view or add a new subscription.",
+        "star": "Star",
+        "bookmark": "Bookmark",
+        "starred": "Article starred",
+        "unstarred": "Article unstarred",
+        "bookmarked": "Article bookmarked",
+        "unbookmarked": "Article unbookmarked",
+        "reader": {
+            "title": "Reader",
+            "empty": {
+                "select_article": "Select an article to read",
+                "hint_prefix": "Press",
+                "hint_navigate": "to navigate",
+                "hint_shortcuts": "for all shortcuts"
+            },
+            "annotations": {
+                "show": "Show annotations",
+                "hide": "Hide annotations",
+                "annotate": "Enable annotation mode",
+                "annotating": "Annotation mode on",
+                "create_title": "Create highlight",
+                "note_placeholder": "Add a note (optional)",
+                "cancel": "Cancel",
+                "save": "Save",
+                "edit": "Edit",
+                "selected_text": "Selected text",
+                "no_note": "No note",
+                "delete": "Delete",
+                "close": "Close",
+                "copy": {
+                    "copy_code": "Copy code",
+                    "copied": "Copied",
+                    "copy_failed": "Copy failed",
+                    "code_copied_to_clipboard": "Code copied to clipboard."
+                },
+                "no_annotations": "No annotations found",
+                "no_annotations_hint": "Select text in the article to create annotations."
+            }
+        }
+    },
+    "auth": {
+        "login": {
+            "subtitle": "Self-hosted RSS reader — Sign in to continue",
+            "forgot_password": "Forgot password?"
+        },
+        "forgot_password": {
+            "subtitle": "Forgot password — Enter your email to reset",
+            "back_to_login": "Back to sign in"
+        },
+        "reset_password": {
+            "subtitle": "Reset password — Enter your new password"
+        }
+    },
+    "seo": {
+        "verify_email": {
+            "title": "Verify email",
+            "description": "Verify your email address to complete registration."
+        },
+        "login": {
+            "title": "Sign in",
+            "description": "Sign in to your Feedbase instance."
+        },
+        "forgot_password": {
+            "title": "Forgot password",
+            "description": "Reset your password if you've forgotten it."
+        },
+        "reset_password": {
+            "title": "Reset password",
+            "description": "Set a new password for your account."
+        },
+        "offline": {
+            "title": "Offline",
+            "description": "You are currently offline. This page is available while offline."
+        },
+        "home": {
+            "title": "Your Reader",
+            "description": "Your personalized RSS reader. Start reading your subscribed feeds now."
+        },
+        "settings": {
+            "title": "Settings",
+            "description": "Manage your settings."
+        },
+        "error": {
+            "title": "{status_code} Error",
+            "description": "An unexpected error occurred."
+        }
+    },
+    "offline": {
+        "eyebrow": "No connection",
+        "heading": "You're offline",
+        "message": "Feedbase can't reach the server right now. Your last 3 read articles are still available for offline reading.",
+        "cached_articles_label": "Articles",
+        "no_cached_articles": "No cached articles available.",
+        "no_cached_articles_hint": "Read articles while online to make them available offline.",
+        "close_reader": "Back to articles",
+        "no_content_available": "No offline content available.",
+        "try_again": "Try again",
+        "checking": "Checking…"
+    }
+}

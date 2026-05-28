@@ -1,0 +1,34 @@
+{% extends "components/form/inputs/_input.html" %} {% block input %}
+<div
+    x-data="{
+    selected: {{ field.value | default([], true) | tojson }},
+    required: {{ field.required | lower }},
+    get hasError() { return this.required && (!Array.isArray(this.selected) || this.selected.length === 0); }
+}"
+>
+    <div
+        class="fb-field-group"
+        style="display: flex; flex-direction: column; gap: 8px"
+    >
+        {% for option in field.options %}
+        <label class="fb-check-wrap">
+            <input
+                type="checkbox"
+                name="{{ field.name }}[]"
+                value="{{ option.value }}"
+                x-model="selected"
+                class="fb-checkbox"
+            />
+            <div class="fb-check-label">
+                {{ option.label or option.text or option.value }}
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+    <div
+        class="fb-field-error fb-mt-2"
+        x-show="hasError"
+        x-text="'Please select at least one option.'"
+    ></div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+<div class="fb-field" x-data="{
+  previewUrl: '{{ field.current_avatar_url | default('') }}',
+  maxSizeBytes: 0,
+  errorMessage: '',
+  init() {
+    const maxSizeStr = '{{ field.max_size | default('') }}';
+    if (maxSizeStr) {
+      const match = maxSizeStr.match(/^(\d+(?:\.\d+)?)\s*(KB|MB)$/i);
+      if (match) {
+        let size = parseFloat(match[1]);
+        const unit = match[2].toUpperCase();
+        if (unit === 'KB') this.maxSizeBytes = size * 1024;
+        else if (unit === 'MB') this.maxSizeBytes = size * 1024 * 1024;
+      }
+    }
+  },
+  handleFileUpload(event) {
+    const file = event.target.files[0];
+    this.errorMessage = '';
+    if (file) {
+      if (this.maxSizeBytes > 0 && file.size > this.maxSizeBytes) {
+        const maxMB = (this.maxSizeBytes / (1024 * 1024)).toFixed(1);
+        this.errorMessage = `File too large. Maximum size is ${maxMB}MB.`;
+        event.target.value = '';
+        this.previewUrl = '{{ field.current_avatar_url | default('') }}';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => { this.previewUrl = e.target.result; };
+      reader.readAsDataURL(file);
+    } else {
+      this.previewUrl = '{{ field.current_avatar_url | default('') }}';
+    }
+  }
+}">
+  {% if field.label %}<label class="fb-label">
+      {{ field.label }}
+      {% if field.required %}
+        <span class="fb-label-required" title="Required field">*</span>{% endif %}
+    </label>
+  {% endif %}
+
+  <div x-show="previewUrl" x-cloak>
+    <img :src="previewUrl" alt="Avatar preview" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 12px;">
+  </div>
+
+  <input
+    type="file"
+    id="{{ form.name }}-{{ field.name }}"
+    name="{{ field.name }}"
+    class="fb-input {% if field.css %}{{ field.css }}{% endif %}"
+    accept="{{ field.accept | default('image/*') }}"
+    @change="handleFileUpload"
+    {% if field.required %}required{% endif %}
+    {% if field.disabled %}disabled{% endif %}
+  />
+
+  <div x-show="errorMessage" x-text="errorMessage" class="fb-field-error" style="color: #f04a4a;"></div>
+
+  <div id="{{ field.name }}-error" class="fb-field-error"></div>
+
+  {% if field.max_size %}<span class="fb-hint">Max file size: {{ field.max_size }}</span>{% endif %}
+  {% if field.help_text %}<span class="fb-hint">{{ field.help_text }}</span>{% endif %}
+</div>

@@ -1,0 +1,39 @@
+{# typja:var navbar: dict[str, Any], panes: dict[str, Any], reader: dict[str, Any], user: User #} 
+
+{% extends "layouts/root.html" %} 
+
+{% block head %}
+<script defer type="module" src="{{ asset('js/pwa.js') }}"></script>
+{% endblock %} 
+
+{% block body %}
+<div id="home">
+    {{ render_block("components/pull-refresh/pull-refresh.html") }}
+
+    <div
+        class="fb-app-shell fb-h-screen fb-w-full"
+        x-data="{ mobPane: 0, unread: 0 }"
+        @article-stats-updated.window="unread = $event.detail.unread"
+        @switch-pane.window="mobPane = $event.detail"
+        :class="{ 'mob-pane-1': mobPane === 1, 'mob-pane-2': mobPane === 2 }"
+    >
+        {{ render_block("components/navbar/navbar.html", navbar=navbar, user=user) }}
+
+        <main class="fb-app-body">
+            <div class="fb-sidebar-pane">
+                {{ render_block("partials/panes/sidebar_pane.html", data=panes.sidebar, notifications=notifications) }}
+            </div>
+
+            <div class="fb-article-list-pane">
+                {{ render_block("partials/panes/articles_pane.html", data=panes.articles, notifications=notifications) }}
+            </div>
+
+            <div class="fb-reader-pane">
+                {{ render_block("partials/panes/reader_pane.html", data=panes.reader) }}
+            </div>
+        </main>
+
+        {{ render_block("components/mobile-app-bar/mobile-app-bar.html") }}
+    </div>
+</div>
+{% endblock %}

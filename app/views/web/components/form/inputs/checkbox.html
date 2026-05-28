@@ -1,0 +1,24 @@
+<div class="fb-field">
+  <label class="fb-check-wrap">
+    <input type="hidden" name="{{ field.name }}" value="false" />
+    <input
+      type="checkbox"
+      class="fb-checkbox {% if field.css %}{{ field.css }}{% endif %}"
+      {% if field.value == true or field.value == 'true' %}checked{% endif %}
+      {% if field.required %}required{% endif %}
+      {% if field.disabled %}disabled{% endif %}
+      {% if 'data-enable-on-changed-value' in field %}
+      data-enable-on-changed-value="{{ field['data-enable-on-changed-value'] }}"
+      {% endif %}
+      onchange="this.previousElementSibling.value = this.checked ? 'true' : 'false'"
+    />
+    <div>
+      <div class="fb-check-label">
+        {{ field.label | default('') }}
+        {% if field.required %}<span class="fb-label-required" title="Required field">*</span>{% endif %}
+      </div>
+      {% if field.help_text %}<div class="fb-check-hint">{{ field.help_text }}</div>{% endif %}
+    </div>
+  </label>
+  <div id="{{ field.name }}-error" class="fb-field-error"></div>
+</div>

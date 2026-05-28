@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="{{ APP_LOCALE() }}">
+    <head>
+        <!-- Meta tags -->
+        {{ render_block("components/seo/meta.html", meta=meta) }}
+
+        <!-- PWA -->
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="{{ APP_NAME }}" />
+        <meta name="vapid-public-key" content="{{ APP_VAPID_PUBLIC_KEY }}" />
+        <link rel="manifest" href="{{ asset('pwa/manifest.json') }}" />
+
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            href="{{ asset('images/favicon.ico') }}"
+            type="image/x-icon"
+        />
+        <link
+            rel="apple-touch-icon"
+            href="{{ asset('images/apple-touch-icon.png') }}"
+        />
+
+        <!-- Stylesheets -->
+        <link
+            rel="stylesheet"
+            href="{{ asset('vendor/framework7-icons/framework7-icons.5.0.5.css') }}"
+        />
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+
+        <!-- Scripts -->
+        <script id="notifications-config" type="application/json">
+            {
+                "webPushUrl": "{{ notifications.web_push_subscription_url }}"
+            }
+        </script>
+        <script>
+            window.__NOTIFICATIONS_CONFIG__ = JSON.parse(
+                document.getElementById("notifications-config").textContent,
+            );
+        </script>
+
+        <script type="module" src="{{ asset('js/app.js') }}"></script>
+        <script
+            defer
+            src="{{ asset('vendor/alpinejs/alpinejs.3.15.9.js') }}"
+        ></script>
+        <script defer src="{{ asset('vendor/htmx/htmx.2.0.8.js') }}"></script>
+        <script
+            defer
+            src="{{ asset('vendor/htmx/extensions/preload.2.0.8.js') }}"
+        ></script>
+        <script
+            defer
+            src="{{ asset('vendor/htmx/extensions/loading-states.2.0.8.js') }}"
+        ></script>
+        <script
+            defer
+            src="{{ asset('vendor/htmx/extensions/form-json.2.0.8.js') }}"
+        ></script>
+        <script
+            defer
+            src="{{ asset('js/extensions/micro-template.0.1.0.js') }}"
+        ></script>
+        <script
+            defer
+            src="{{ asset('js/extensions/pagination.0.1.0.js') }}"
+        ></script>
+
+        <!-- Dynamic linked assets -->
+        {% block head %}{% endblock %}
+    </head>
+
+    <body hx-ext="preload,loading-states">
+        {% block body %}{% endblock %}
+    </body>
+</html>

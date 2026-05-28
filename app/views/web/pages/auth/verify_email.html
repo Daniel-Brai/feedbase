@@ -1,0 +1,11 @@
+{# typja:var verify_email_form: str, change_language_form: str, token: str #}
+
+{% extends "layouts/root.html" %}
+
+{% block body %}
+<div class="fb-flex fb-items-center fb-justify-center fb-h-screen fb-w-full">
+    <div class="fb-w-full fb-max-w-lg fb-px-5">
+        {{ render_block("components/form/form.html", form=verify_email_form, config_overrides={"submit_url": {"token": token}}) }}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,213 @@
+{# typja:var user: User, navbar: dict[str, Any] #}
+
+<nav class="fb-navbar">
+    <a href="/" hx-boost="true" class="fb-navbar-logo">
+        {{ render_block("components/logo/logo.html", size="small") }}
+    </a>
+
+    <div class="fb-navbar-right">
+        <div class="fb-w-32 fb-flex fb-items-center" style="margin-top: 6px">
+            {{ render_block("components/form/form.html",
+            form=navbar.forms.change_language_form) }}
+        </div>
+
+        <button
+            id="keyboard-shortcuts-btn"
+            class="fb-navbar-icon-btn keyboard-shortcuts-button"
+            title="{{ _t('keyboard_shortcuts.label') }}"
+            x-data
+            x-show="!window.MobileUtils?.isMobile()"
+            @click="window.Modal.show({ 
+                heading_title: '{{ _t('keyboard_shortcuts.label') }}', 
+                render_fn: () => window.KeybindingsUtils.renderKeybindingsHtml(window.KeybindingsData) 
+            })"
+        >
+            <i class="f7-icons">keyboard</i>
+        </button>
+
+        <script id="keybindings-config" type="application/json">
+            [
+                {
+                    "categories": [
+                        {
+                            "title": "{{ _t('keyboard_shortcuts.navigation.title') }}",
+                            "items": [
+                                {
+                                    "keys": ["j", "k"],
+                                    "label": "{{ _t('keyboard_shortcuts.navigation.next_prev_article') }}"
+                                },
+                                {
+                                    "keys": ["J", "K"],
+                                    "label": "{{ _t('keyboard_shortcuts.navigation.next_prev_feed') }}"
+                                },
+                                {
+                                    "keys": ["g", "g"],
+                                    "label": "{{ _t('keyboard_shortcuts.navigation.scroll_to_top') }}"
+                                },
+                                {
+                                    "keys": ["G"],
+                                    "label": "{{ _t('keyboard_shortcuts.navigation.scroll_to_bottom') }}"
+                                },
+                                {
+                                    "keys": ["h"],
+                                    "label": "{{ _t('keyboard_shortcuts.navigation.home') }}"
+                                },
+                                {
+                                    "keys": ["e"],
+                                    "label": "{{ _t('keyboard_shortcuts.navigation.settings') }}"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "{{ _t('keyboard_shortcuts.go_to.title') }}",
+                            "items": [
+                                {
+                                    "keys": ["g", "a"],
+                                    "label": "{{ _t('keyboard_shortcuts.go_to.all_articles') }}"
+                                },
+                                {
+                                    "keys": ["g", "s"],
+                                    "label": "{{ _t('keyboard_shortcuts.go_to.starred') }}"
+                                },
+                                {
+                                    "keys": ["g", "b"],
+                                    "label": "{{ _t('keyboard_shortcuts.go_to.bookmarks') }}"
+                                },
+                                {
+                                    "keys": ["g", "u"],
+                                    "label": "{{ _t('keyboard_shortcuts.go_to.unread') }}"
+                                },
+                                {
+                                    "keys": ["g", "t"],
+                                    "label": "{{ _t('keyboard_shortcuts.go_to.today') }}"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "categories": [
+                        {
+                            "title": "{{ _t('keyboard_shortcuts.actions.title') }}",
+                            "items": [
+                                {
+                                    "keys": ["r"],
+                                    "label": "{{ _t('keyboard_shortcuts.actions.toggle_read') }}"
+                                },
+                                {
+                                    "keys": ["s"],
+                                    "label": "{{ _t('keyboard_shortcuts.actions.toggle_star') }}"
+                                },
+                                {
+                                    "keys": ["b"],
+                                    "label": "{{ _t('keyboard_shortcuts.actions.bookmark') }}"
+                                },
+                                {
+                                    "keys": ["o"],
+                                    "label": "{{ _t('keyboard_shortcuts.actions.open_original_url') }}"
+                                },
+                                {
+                                    "keys": ["y", "y"],
+                                    "label": "{{ _t('keyboard_shortcuts.actions.copy_original_url') }}"
+                                },
+                                {
+                                    "keys": ["d", "d"],
+                                    "label": "{{ _t('keyboard_shortcuts.actions.unsubscribe_feed') }}"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "{{ _t('keyboard_shortcuts.ui.title') }}",
+                            "items": [
+                                {
+                                    "keys": ["u"],
+                                    "label": "{{ _t('keyboard_shortcuts.ui.add_feed') }}"
+                                },
+                                {
+                                    "keys": ["/"],
+                                    "label": "{{ _t('keyboard_shortcuts.ui.search') }}"
+                                },
+                                {
+                                    "keys": ["n", "N"],
+                                    "label": "{{ _t('keyboard_shortcuts.ui.next_prev_result') }}"
+                                },
+                                {
+                                    "keys": ["?"],
+                                    "label": "{{ _t('keyboard_shortcuts.ui.this_overlay') }}"
+                                },
+                                {
+                                    "keys": ["Esc"],
+                                    "label": "{{ _t('keyboard_shortcuts.ui.close_back') }}"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        </script>
+        <script>
+            window.KeybindingsData = JSON.parse(
+                document.getElementById("keybindings-config").textContent,
+            );
+        </script>
+        <script id="keyboard-translations-config" type="application/json">
+            {
+                "go_to": {
+                    "all": "{{ _t('sidebar.all_articles') }}",
+                    "starred": "{{ _t('sidebar.starred') }}",
+                    "bookmarks": "{{ _t('sidebar.bookmarks') }}",
+                    "unread": "{{ _t('sidebar.unread') }}",
+                    "today": "{{ _t('sidebar.today') }}"
+                },
+                "messages": {
+                    "no_selected_article_toggle_read": "{{ _t('keyboard_shortcuts.messages.no_selected_article_toggle_read') }}",
+                    "article_marked_as_unread": "{{ _t('keyboard_shortcuts.messages.article_marked_as_unread') }}",
+                    "article_marked_as_read": "{{ _t('keyboard_shortcuts.messages.article_marked_as_read') }}",
+                    "unable_to_toggle_read_status": "{{ _t('keyboard_shortcuts.messages.unable_to_toggle_read_status') }}",
+                    "no_selected_article_to_star": "{{ _t('keyboard_shortcuts.messages.no_selected_article_to_star') }}",
+                    "no_selected_article_to_bookmark": "{{ _t('keyboard_shortcuts.messages.no_selected_article_to_bookmark') }}",
+                    "no_article_url_to_open": "{{ _t('keyboard_shortcuts.messages.no_article_url_to_open') }}",
+                    "no_article_url_to_copy": "{{ _t('keyboard_shortcuts.messages.no_article_url_to_copy') }}",
+                    "article_url_copied": "{{ _t('keyboard_shortcuts.messages.article_url_copied') }}",
+                    "unable_to_copy_article_url": "{{ _t('keyboard_shortcuts.messages.unable_to_copy_article_url') }}",
+                    "no_feed_selected_to_unsubscribe": "{{ _t('keyboard_shortcuts.messages.no_feed_selected_to_unsubscribe') }}",
+                    "unable_to_find_feed_in_sidebar": "{{ _t('keyboard_shortcuts.messages.unable_to_find_feed_in_sidebar') }}",
+                    "unable_to_open_feed_actions": "{{ _t('keyboard_shortcuts.messages.unable_to_open_feed_actions') }}"
+                }
+            }
+        </script>
+        <script>
+            window.KeyboardTranslations = JSON.parse(
+                document.getElementById("keyboard-translations-config")
+                    .textContent,
+            );
+        </script>
+
+        <div class="fb-w-32 fb-flex fb-items-center">
+            {{ render_block("components/form/form.html",
+            form=navbar.forms.refresh_feeds_form) }}
+        </div>
+
+        <div style="position: relative">
+            <button
+                class="fb-user-pill"
+                x-data="window.ProfileActions(
+                    '{{ navbar.urls.settings_url }}', 
+                    '{{ navbar.urls.logout_form_url }}', 
+                    '{{ _t('settings.label') }}', 
+                    '{{ _t('forms.logout.submit_btn') }}',
+                    {{ 'true' if navbar.current_path is defined and navbar.current_path.startswith('/settings') else 'false' }}
+                )"
+                @click.stop.prevent="showActions($el)"
+            >
+                <div class="fb-user-avatar">{{ user.name[0] }}</div>
+                <span>{{ user.name }}</span>
+                <i
+                    class="f7-icons chevron_down"
+                    style="font-size: 11px; color: var(--muted, #6a6a62)"
+                    >chevron_down</i
+                >
+            </button>
+        </div>
+    </div>
+</nav>

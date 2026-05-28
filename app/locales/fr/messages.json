@@ -1,0 +1,230 @@
+{
+    "appbar": {
+        "feeds": "Flux",
+        "reader": "Lecteur",
+        "articles": "Articles"
+    },
+    "settings": {
+        "label": "Paramètres",
+        "account": "Compte",
+        "opml": "OPML",
+        "fever": "Fever",
+        "preferences": "Préférences",
+        "back": "Retour",
+        "account_title": "Votre compte",
+        "account_description": "Gérez les paramètres de votre compte ici.",
+        "profile_title": "Profil",
+        "profile_description": "Les détails de votre compte et vos préférences d'affichage",
+        "password_title": "Mot de passe",
+        "password_description": "Mettez à jour votre mot de passe.",
+        "change_email_title": "Changer d'e-mail",
+        "change_email_description": "Mettez à jour votre adresse e-mail.",
+        "preferences_title": "Préférences",
+        "preferences_description": "Mettez à jour vos préférences d'affichage et de lecture.",
+        "fever_title": "API Fever",
+        "fever_description": "Gérez vos paramètres de l'API Fever ici.",
+        "fever_key_label": "Clé API Fever",
+        "fever_key_hint": "Utilisez cette clé avec des clients compatibles Fever à {fever_endpoint} et {docs_endpoint} pour les détails d'utilisation.",
+        "fever_copy_key": "Copier la clé",
+        "fever_copy_success": "Clé Fever copiée dans le presse-papiers",
+        "fever_toggle_visibility": "Basculer la visibilité de la clé",
+        "fever_key_not_available": "Votre clé API Fever n'est pas disponible.",
+        "opml_title": "OPML",
+        "opml_description": "Importez ou exportez vos abonnements à l'aide de fichiers OPML.",
+        "opml_export_title": "Exporter",
+        "opml_export_description": "Téléchargez vos abonnements actuels au format OPML. Compatible avec tous les principaux lecteurs RSS.",
+        "opml_import_title": "Importer",
+        "opml_import_description": "Téléchargez un fichier OPML pour importer vos abonnements.",
+        "notifications": "Notifications",
+        "subscriptions": "Abonnements"
+    },
+    "keyboard_shortcuts": {
+        "label": "Raccougrcis clavier",
+        "navigation": {
+            "title": "Navigation",
+            "next_prev_article": "Précédent / suivant article",
+            "next_prev_feed": "Précédent / suivant flux",
+            "scroll_to_top": "Aller en haut",
+            "home": "Accueil",
+            "settings": "Paramètres",
+            "scroll_to_bottom": "Aller en bas"
+        },
+        "go_to": {
+            "title": "Aller à",
+            "all_articles": "Tous les articles",
+            "starred": "Favoris",
+            "bookmarks": "Signets",
+            "unread": "Non lus",
+            "today": "Aujourd'hui"
+        },
+        "actions": {
+            "title": "Actions",
+            "toggle_read": "Basculer lu/non lu",
+            "toggle_star": "Basculer favori",
+            "bookmark": "Ajouter un signet",
+            "open_original_url": "Ouvrir l'URL originale",
+            "copy_original_url": "Copier l'URL originale",
+            "unsubscribe_feed": "Se désabonner du flux"
+        },
+        "ui": {
+            "title": "Interface",
+            "add_feed": "Ajouter un flux",
+            "search": "Rechercher",
+            "next_prev_result": "Résultat précédent / suivant",
+            "this_overlay": "Ce panneau",
+            "close_back": "Fermer / retour"
+        },
+        "messages": {
+            "no_selected_article_toggle_read": "Aucun article sélectionné disponible pour basculer l'état lu/non lu.",
+            "article_marked_as_unread": "Article marqué comme non lu.",
+            "article_marked_as_read": "Article marqué comme lu.",
+            "unable_to_toggle_read_status": "Impossible de basculer l'état de lecture.",
+            "no_selected_article_to_star": "Aucun article sélectionné disponible pour ajouter un favori.",
+            "no_selected_article_to_bookmark": "Aucun article sélectionné disponible pour ajouter un signet.",
+            "no_article_url_to_open": "Aucune URL d'article disponible à ouvrir.",
+            "no_article_url_to_copy": "Aucune URL d'article disponible à copier.",
+            "article_url_copied": "URL de l'article copiée dans le presse-papiers.",
+            "unable_to_copy_article_url": "Impossible de copier l'URL de l'article.",
+            "no_feed_selected_to_unsubscribe": "Aucun flux sélectionné à désabonner.",
+            "unable_to_find_feed_in_sidebar": "Impossible de trouver le flux dans la barre latérale.",
+            "unable_to_open_feed_actions": "Impossible d'ouvrir les actions du flux."
+        }
+    },
+    "sidebar": {
+        "feeds": "Flux",
+        "feed_actions": "Actions du flux",
+        "views": "Vues",
+        "all_articles": "Tous les articles",
+        "unread": "Non lus",
+        "starred": "Favoris",
+        "bookmarks": "Signets",
+        "today": "Aujourd'hui",
+        "new_folder": "Nouveau dossier",
+        "add_new_folder": "Ajouter un nouveau dossier",
+        "rename_folder": "Renommer le dossier",
+        "delete_folder": "Supprimer le dossier",
+        "folder_actions": "Actions du dossier",
+        "move_to_folder": "Déplacer vers un dossier",
+        "move_to_folder_success": "Flux déplacé vers le dossier avec succès.",
+        "move_to_folder_error": "Impossible de déplacer le flux vers le dossier.",
+        "rename_subscription": "Renommer",
+        "copy_feed_url": "Copier l'URL du flux",
+        "open_feed_url": "Ouvrir l'URL du flux",
+        "unsubscribe": "Se désabonner",
+        "rename_feed": "Renommer le flux",
+        "copy_feed_url_success": "URL du flux copiée dans le presse-papiers",
+        "copy_feed_url_error": "Impossible de copier l'URL du flux",
+        "no_subscriptions": "Aucun abonnement trouvé",
+        "add_feed": "Ajoutez un flux pour commencer à lire.",
+        "unsubscribe_success": "Abonnement supprimé avec succès.",
+        "unsubscribe_error": "Impossible de se désabonner. Veuillez réessayer.",
+        "error": "Erreur",
+        "error_loading_subscriptions": "Impossible de charger les abonnements",
+        "retry": "Réessayer"
+    },
+    "articles": {
+        "no_articles": "Aucun article trouvé",
+        "no_articles_hint": "Essayez une autre vue ou ajoutez un abonnement.",
+        "star": "Favori",
+        "bookmark": "Signet",
+        "starred": "Article mis en favori",
+        "unstarred": "Article retiré des favoris",
+        "bookmarked": "Article ajouté aux signets",
+        "unbookmarked": "Article retiré des signets",
+        "reader": {
+            "title": "Lecteur",
+            "empty": {
+                "select_article": "Sélectionnez un article à lire",
+                "hint_prefix": "Appuyez sur",
+                "hint_navigate": "pour naviguer",
+                "hint_shortcuts": "pour tous les raccourcis"
+            },
+            "annotations": {
+                "show": "Afficher les annotations",
+                "hide": "Masquer les annotations",
+                "create_title": "Créer une surbrillance",
+                "note_placeholder": "Ajouter une note (optionnel)",
+                "cancel": "Annuler",
+                "save": "Enregistrer",
+                "edit": "Modifier",
+                "selected_text": "Texte sélectionné",
+                "no_note": "Pas de note",
+                "delete": "Supprimer",
+                "close": "Fermer",
+                "copy": {
+                    "copy_code": "Copier le code",
+                    "copied": "Copié",
+                    "copy_failed": "Échec de la copie",
+                    "code_copied_to_clipboard": "Code copié dans le presse-papiers."
+                },
+                "annotate": "Activer le mode annotation",
+                "annotating": "Mode annotation activé",
+                "no_annotations": "Aucune annotation trouvée",
+                "no_annotations_hint": "Sélectionnez du texte dans l'article pour créer des annotations."
+            }
+        }
+    },
+    "auth": {
+        "login": {
+            "subtitle": "Lecteur RSS auto-hébergé — Connectez-vous pour continuer",
+            "forgot_password": "Mot de passe oublié ?"
+        },
+        "forgot_password": {
+            "subtitle": "Mot de passe oublié — Entrez votre adresse e-mail pour réinitialiser",
+            "back_to_login": "Retour à la connexion"
+        },
+        "reset_password": {
+            "subtitle": "Réinitialiser le mot de passe — Entrez votre nouveau mot de passe ci-dessous"
+        }
+    },
+    "seo": {
+        "verify_email": {
+            "title": "Vérifier l'e-mail",
+            "description": "Vérifiez votre adresse e-mail pour finaliser l'inscription."
+        },
+        "login": {
+            "title": "Se connecter",
+            "description": "Connectez-vous à votre instance Feedbase."
+        },
+        "forgot_password": {
+            "title": "Mot de passe oublié",
+            "description": "Réinitialisez votre mot de passe si vous l'avez oublié."
+        },
+        "reset_password": {
+            "title": "Réinitialiser le mot de passe",
+            "description": "Définissez un nouveau mot de passe pour votre compte."
+        },
+        "offline": {
+            "title": "Hors ligne",
+            "description": "Vous êtes actuellement hors ligne. Cette page est disponible hors ligne."
+        },
+        "home": {
+            "title": "Votre lecteur",
+            "description": "Votre lecteur RSS personnalisé. Commencez à lire vos flux abonnés maintenant."
+        },
+        "article": {
+            "title": "Articles de {feed_name}",
+            "description": "Article de {feed_name}"
+        },
+        "settings": {
+            "title": "Paramètres",
+            "description": "Gérez vos paramètres."
+        },
+        "error": {
+            "title": "Erreur {status_code}",
+            "description": "Une erreur inattendue s'est produite."
+        }
+    },
+    "offline": {
+        "eyebrow": "Pas de connexion",
+        "heading": "Vous êtes hors ligne",
+        "message": "Feedbase ne peut pas joindre le serveur pour le moment. Vos 3 derniers articles lus sont toujours disponibles pour une lecture hors ligne.",
+        "cached_articles_label": "Articles",
+        "no_cached_articles": "Aucun article mis en cache.",
+        "no_cached_articles_hint": "Lisez des articles en ligne pour les rendre disponibles hors ligne.",
+        "close_reader": "Retour aux articles",
+        "no_content_available": "Aucun contenu hors ligne disponible.",
+        "try_again": "Réessayer",
+        "checking": "Vérification…"
+    }
+}

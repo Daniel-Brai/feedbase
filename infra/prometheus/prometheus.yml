@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "feedbase-app"
+    static_configs:
+      - targets: ["app:5555"]
+
+  - job_name: "feedbase-prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: "feedbase-loki"
+    static_configs:
+      - targets: ["loki:3100"]

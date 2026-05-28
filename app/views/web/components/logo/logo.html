@@ -1,0 +1,34 @@
+{# typja:var show_version: bool, size: Literal["small", "medium"] | None, APP_VERSION: str #}
+
+{% set logo_text_size = "fb-logo-text" if size is not defined or size == "medium" else "fb-logo-text-sm" %}
+{% set logo_image_size = "32" if size is not defined or size == "medium" else "20" %}
+{% set logo_image_path = "images/svgs/primary-32x32.svg" if logo_size == "32" else "images/svgs/primary-20x20.svg" %}
+
+{% if show_version is defined and show_version is true %} 
+<div class="fb-flex fb-items-center fb-justify-start">
+    <img
+        src="{{ asset(logo_image_path) }}"
+        alt="Feedbase Logo"
+        class="fb-inline-block fb-mr-3"
+        width="{{ logo_image_size }}"
+        height="{{ logo_image_size }}"
+    />
+    <span class="{{ logo_text_size }}">Feed<em>base</em></span>
+    <span
+        class="fb-text-xs fb-text-muted fb-ml-3 fb-bg-surface2 fb-rounded-full fb-border fb-border-border"
+        style="padding: 2px 8px"
+        >v{{ APP_VERSION }}</span
+    >
+</div>
+{% else %}
+<div class="fb-flex fb-items-center fb-justify-start">
+    <img
+        src="{{ asset(logo_image_path) }}"
+        alt="Feedbase Logo"
+        class="fb-inline-block fb-mr-3"
+        width="{{ logo_image_size }}"
+        height="{{ logo_image_size }}"
+    />
+    <span class="{{ logo_text_size }}">Feed<em>base</em></span>
+</div>
+{% endif %}

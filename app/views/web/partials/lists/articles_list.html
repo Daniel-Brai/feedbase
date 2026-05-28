@@ -1,0 +1,131 @@
+{# typja:var articles_url: str, article_status_update_url: str, notification_stream_url: str, _t: Callable[[str], str] #} 
+
+<div id="articles-list-container">
+    <div
+        id="articles"
+        class="fb-flex fb-flex-col fb-gap-3 fb-px-4"
+        hx-ext="pagination"
+        pagination-url="{{ articles_url }}"
+        pagination-mode="cursor"
+        pagination-limit-param="size"
+        pagination-limit="10"
+        pagination-cursor-field="metadata.next_page"
+        pagination-has-more-field="metadata.next_page"
+        pagination-append-mode="append"
+        pagination-template="articles-tpl"
+        pagination-error-template="articles-error-tpl"
+        pagination-empty-template="articles-empty-tpl"
+        pagination-loading-indicator
+        pagination-autoload="true"
+        pagination-infinite="true"
+        pagination-threshold="0.2"
+        pagination-refresh-stream="{{ notification_stream_url }}"
+        pagination-refresh-stream-with-credentials="true"
+        pagination-refresh-stream-event-transformer="window.PaginationUtils.transformToPaginationStream"
+        pagination-refresh-stream-shared="true"
+    >
+        <div class="fb-articles-list" pagination-list></div>
+        <div
+            class="fb-flex fb-items-center fb-justify-center"
+            pagination-loading-indicator
+        >
+            {{ render_block("components/loading-indicator/loading-indicator.html", type="minimal") }}
+        </div>
+    </div>
+
+    <template id="articles-tpl">
+        <div
+            class="fb-article-card fb-p-4 fb-flex fb-flex-col"
+            data-article-id="[[id]]"
+            data-content="[[content]]"
+            data-guid="[[guid]]"
+            data-url="[[url]]"
+            data-status-is-read="[[#if status]][[status.is_read]][[/if]]"
+        >
+            <div class="fb-article-card-header fb-flex fb-flex-col fb-gap-3">
+                [[#if feed_title]]
+                <div
+                    class="fb-article-card-feed-title fb-text-xs fb-text-muted"
+                >
+                    [[feed_title]]
+                </div>
+                [[/if]]
+                <div
+                    class="fb-article-card-title-row fb-flex fb-items-start fb-justify-between fb-gap-3"
+                >
+                    <p
+                        class="fb-article-title fb-text-sm2 fb-font-medium fb-text-text"
+                        style="letter-spacing: 0.01em; line-height: 1.45"
+                    >
+                        [[title]]
+                    </p>
+                    <div
+                        class="fb-article-card-actions fb-flex fb-items-center fb-gap-2 fb-cursor-pointer"
+                        x-data="window.ArticleActions()"
+                        data-article-status-update-url="{{ article_status_update_url }}"
+                        data-initial-starred="[[status.is_starred]]"
+                        data-initial-bookmarked="[[status.is_bookmarked]]"
+                        data-star-title="{{ _t('articles.star') }}"
+                        data-bookmark-title="{{ _t('articles.bookmark') }}"
+                        data-starred-message="{{ _t('articles.starred') }}"
+                        data-unstarred-message="{{ _t('articles.unstarred') }}"
+                        data-bookmarked-message="{{ _t('articles.bookmarked') }}"
+                        data-unbookmarked-message="{{ _t('articles.unbookmarked') }}"
+                    >
+                        <i
+                            class="f7-icons fb-article-action-icon"
+                            :class="{ 'fb-article-action-active': isStarred }"
+                            :title="starTitle"
+                            x-text="isStarred ? 'star_fill' : 'star'"
+                            @click.stop.prevent="toggleStar()"
+                        ></i>
+                        <i
+                            class="f7-icons fb-article-action-icon"
+                            :class="{ 'fb-article-action-active': isBookmarked }"
+                            :title="bookmarkTitle"
+                            x-text="isBookmarked ? 'bookmark_fill' : 'bookmark'"
+                            @click.stop.prevent="toggleBookmark()"
+                        ></i>
+                    </div>
+                </div>
+                <div
+                    class="fb-article-card-meta fb-flex fb-items-center fb-justify-between fb-gap-3 fb-flex-wrap fb-text-sm fb-text-muted fb-cursor-pointer"
+                >
+                    <span>[[author]]</span>
+                    <time data-published-at="[[published_at]]"></time>
+                </div>
+            </div>
+            <p class="fb-article-summary fb-text-sm fb-text-muted">
+                [[summary]]
+            </p>
+        </div>
+    </template>
+
+    <template id="articles-error-tpl">
+        <div
+            class="fb-empty-state fb-mt-4 fb-p-4 fb-rounded fb-text-text fb-text-center fb-flex fb-flex-col fb-items-center fb-gap-2"
+        >
+            <i class="f7-icons fb-text-red fb-text-lg"
+                >exclamationmark_triangle</i
+            >
+            <p class="fb-text-center fb-font-medium fb-text-sm">
+                {{ _t('sidebar.error') }}
+            </p>
+            <p class="fb-text-center fb-text-muted fb-text-sm">[[message]]</p>
+        </div>
+    </template>
+
+    <template id="articles-empty-tpl">
+        <div
+            class="fb-empty-state fb-mt-4 fb-p-4 fb-rounded fb-text-muted fb-text-center fb-flex fb-flex-col fb-items-center fb-gap-2"
+        >
+            <i class="f7-icons fb-text-amber fb-text-lg">doc_text</i>
+            <p class="fb-text-center fb-font-medium fb-text-sm">
+                {{ _t('articles.no_articles') }}
+            </p>
+            <p class="fb-text-center fb-text-muted fb-text-sm">
+                {{ _t('articles.no_articles_hint') }}
+            </p>
+        </div>
+    </template>
+</div>

@@ -1,0 +1,58 @@
+{# typja:var navbar: dict[str, Any], user: User, sidebar: dict[str, Any] #} 
+
+{% extends "layouts/root.html" %} 
+
+{% block head %}
+<script defer type="module" src="{{ asset('js/pwa.js') }}"></script>
+{% endblock %} 
+
+{% block body %}
+<div id="settings">
+    {{ render_block("components/pull-refresh/pull-refresh.html") }}
+
+    <div
+        class="fb-app-shell fb-h-screen fb-w-full"
+        x-data="{ activeTab: '{{ sidebar.active_page | default('account') }}' }"
+    >
+        {{ render_block("components/navbar/navbar.html", navbar=navbar, user=user) }}
+
+        <div class="fb-app-body fb-settings-layout fb-p-4 fb-gap-4">
+            <div class="fb-settings-header fb-flex fb-flex-col fb-gap-4">
+                <a
+                    class="fb-btn fb-btn-ghost fb-flex fb-items-center fb-gap-2 fb-mb-2"
+                    href="/"
+                    hx-boost="true"
+                    hx-push-url="true"
+                    hx-target="body"
+                    style="max-width: fit-content"
+                >
+                    <i class="f7-icons fb-text-lg">chevron_left</i>
+                    <span>{{ _t('settings.back') }}</span>
+                </a>
+
+                <div
+                    class="fb-settings-tabs fb-flex fb-p-1 fb-border fb-border-border fb-rounded-lg fb-overflow-hidden"
+                >
+                    {{ render_block("partials/settings/navlinks.html") }}
+                </div>
+            </div>
+
+            <div class="fb-settings-body fb-flex fb-gap-4">
+                <aside class="fb-settings-sidebar">
+                    {{ render_block("partials/settings/navlinks.html") }}
+                </aside>
+
+                <main class="fb-settings-tab-panels fb-flex-1 fb-mt-2 fb-mb-6">
+                    {{ render_block("partials/settings/account.html", sidebar=sidebar) }} 
+                    
+                    {{ render_block("partials/settings/fever.html", user=user, sidebar=sidebar) }} 
+                    
+                    {{ render_block("partials/settings/opml.html", sidebar=sidebar) }}
+
+                    {{ render_block("partials/settings/preferences.html", sidebar=sidebar) }}
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

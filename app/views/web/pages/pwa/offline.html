@@ -1,0 +1,182 @@
+{# typja:var forms: dict[str, Any], notifications: dict[str, Any] #} 
+
+{% extends "layouts/root.html" %} 
+
+{% block head %}
+<script defer type="module" src="{{ asset('js/pwa.js') }}"></script>
+{% endblock %} 
+
+{% block body %}
+<div id="offline">
+    <div
+        class="fb-offline-shell fb-h-screen fb-w-full"
+        x-data="window.OfflineReader({
+            defaultLabel: `{{ _t('offline.try_again') }}`,
+            checkingLabel: `{{ _t('offline.checking') }}`
+        })"
+        x-init="init()"
+        x-cloak
+    >
+
+        <svg class="fb-offline-grid-lines" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern
+                    id="g"
+                    width="40"
+                    height="40"
+                    patternUnits="userSpaceOnUse"
+                >
+                    <path
+                        d="M40 0H0V40"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="0.4"
+                        opacity="0.04"
+                    />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#g)" />
+        </svg>
+
+        <div class="fb-offline-mark">
+            <svg
+                width="88"
+                height="88"
+                viewBox="0 0 88 88"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <rect x="10" y="62" width="68" height="14" rx="4" fill="#c8f04a" />
+                <rect
+                    x="10"
+                    y="42"
+                    width="46"
+                    height="11"
+                    rx="4"
+                    fill="#c8f04a"
+                    opacity="0.65"
+                />
+                <rect
+                    x="10"
+                    y="25"
+                    width="29"
+                    height="9"
+                    rx="4"
+                    fill="#c8f04a"
+                    opacity="0.35"
+                />
+                <circle cx="72" cy="29" r="13" fill="#c8f04a" opacity="0.9" />
+            </svg>
+            <div class="fb-offline-slash"></div>
+        </div>
+
+        <div class="fb-offline-eyebrow">{{ _t('offline.eyebrow') }}</div>
+
+        <div class="fb-offline-heading">
+            {{ _t('offline.heading') }}<span>.</span>
+        </div>
+
+        <p class="fb-offline-sub">{{ _t('offline.message') }}</p>
+
+        <div class="fb-offline-cached-label" x-show="hasArticles">
+            {{ _t('offline.cached_articles_label') }}
+        </div>
+
+        <div
+            id="offline-cached-articles"
+            class="fb-offline-article-rows fb-mt-6"
+            x-show="hasArticles"
+        >
+            <template x-for="(article, index) in articles" :key="article.id">
+                <div
+                    class="fb-offline-article-row"
+                    @click="openArticle(index)"
+                    style="cursor: pointer"
+                >
+                    <div class="fb-offline-article-row-dot"></div>
+                    <div class="fb-offline-article-row-lines">
+                        <template x-if="article.feed_title">
+                            <div
+                                class="fb-article-card-feed-title fb-text-xs fb-text-muted"
+                                x-text="article.feed_title"
+                            ></div>
+                        </template>
+                        <div
+                            class="fb-article-title fb-text-sm2 fb-font-medium fb-text-text"
+                            style="letter-spacing: 0.01em; line-height: 1.45"
+                            x-text="article.title"
+                        ></div>
+                        <template x-if="article.summary">
+                            <div
+                                class="fb-article-summary fb-text-sm fb-text-muted fb-mt-2"
+                                x-text="truncate(article.summary, 80)"
+                            ></div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div
+            x-show="!hasArticles"
+            class="fb-empty-state fb-offline-empty-state fb-p-4 fb-rounded fb-text-muted fb-text-center fb-flex fb-flex-col fb-items-center fb-gap-2 fb-mb-6"
+        >
+            <i class="f7-icons fb-text-amber fb-text-3xl">doc_text</i>
+            <p
+                class="fb-text-center fb-font-medium fb-text-sm"
+                x-text="emptyTitle"
+            ></p>
+            <p
+                class="fb-text-center fb-text-muted fb-text-sm"
+                x-text="emptyHint"
+            ></p>
+        </div>
+
+        <div
+            id="offline-reader"
+            class="fb-reader-article fb-mt-6"
+            x-show="selectedArticle"
+        >
+            <div
+                class="fb-flex fb-items-center fb-justify-between fb-gap-2 fb-mb-4"
+            >
+                <div>
+                    <div
+                        id="offline-reader-feed"
+                        class="fb-article-card-feed-title fb-text-xs fb-text-muted"
+                        x-text="selectedArticle?.feed_title"
+                    ></div>
+                    <div
+                        id="offline-reader-title"
+                        class="fb-text-sm2 fb-font-medium fb-text-text"
+                        x-text="selectedArticle?.title"
+                    ></div>
+                </div>
+                <button
+                    type="button"
+                    class="fb-btn fb-btn-ghost fb-text-sm"
+                    @click="closeReader()"
+                >
+                    {{ _t('offline.close_reader') }}
+                </button>
+            </div>
+            <div id="offline-reader-content" x-html="renderedContent"></div>
+        </div>
+
+        <div id="offline-empty-title" style="display: none">
+            {{ _t('offline.no_cached_articles') }}
+        </div>
+        <div id="offline-empty-hint" style="display: none">
+            {{ _t('offline.no_cached_articles_hint') }}
+        </div>
+
+        <button
+            class="fb-offline-btn"
+            @click="checkConnection()"
+        >
+            <span><i class="f7-icons fb-text-lg">arrow_clockwise</i></span>
+            <span x-text="label"></span>
+        </button>
+    </div>
+</div>
+{% endblock %}

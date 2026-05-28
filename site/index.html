@@ -1,0 +1,1815 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="application-name" content="Feedbase" />
+        <meta
+            name="description"
+            content="
+            Feedbase is a self-hosted RSS reader platform built with FastAPI, and HTMX. 
+            It offers a sleek and intuitive interface for managing and reading your RSS feeds, with features like feed organization, article management, and offline reading support.
+            "
+        />
+        <meta name="theme-color" content="#0e0e0e" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <title>Feedbase — Self-hosted RSS Reader Platform</title>
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="
+            data:image/svg+xml,
+            <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                <rect x='5' y='33' width='38' height='7' rx='2' fill='%23c8f04a'/>
+                <rect x='5' y='22.5' width='26' height='5.5' rx='2' fill='%23c8f04a' opacity='0.65'/>
+                <rect x='5' y='13.5' width='16' height='4.5' rx='2' fill='%23c8f04a' opacity='0.35'/>
+                <circle cx='38' cy='15.5' r='6' fill='%23c8f04a' opacity='0.9'/>
+            </svg>"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,700;1,9..144,200;1,9..144,300;1,9..144,400&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/framework7-icons@5.0.5/css/framework7-icons.min.css"
+        />
+        <style>
+            :root {
+                --bg: #0e0e0e;
+                --surface: #161616;
+                --surface2: #1c1c1c;
+                --border: #2a2a2a;
+                --border2: #222;
+                --accent: #c8f04a;
+                --accent2: #f0a84a;
+                --accent3: #4ac8f0;
+                --text: #e8e8e0;
+                --muted: #6a6a62;
+                --mono: "DM Mono", monospace;
+                --serif: "Fraunces", serif;
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--mono);
+                font-size: 13.5px;
+                line-height: 1.7;
+                overflow-x: hidden;
+            }
+
+            ::-webkit-scrollbar {
+                width: 5px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--bg);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 3px;
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 48px;
+                height: 56px;
+                background: rgba(14, 14, 14, 0.88);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .fb-logo-mark {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .fb-nav-logo {
+                font-family: var(--serif);
+                font-size: 19px;
+                font-style: italic;
+                color: var(--accent);
+                letter-spacing: -0.03em;
+                text-decoration: none;
+            }
+            .fb-nav-logo span {
+                color: var(--text);
+            }
+
+            .fb-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                padding: 8px 16px;
+                border-radius: 2px;
+                cursor: pointer;
+                text-decoration: none;
+                transition: all 0.15s;
+                border: 1px solid transparent;
+            }
+
+            .fb-btn-nav-gh {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.06em;
+                padding: 6px 13px;
+                border-radius: 2px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--muted);
+                text-decoration: none;
+                cursor: pointer;
+                transition:
+                    color 0.15s,
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .fb-btn-nav-gh svg {
+                color: var(--accent);
+                opacity: 0.85;
+                transition: opacity 0.15s, color 0.15s;
+            }
+            .fb-btn-nav-gh:hover {
+                color: var(--accent);
+                border-color: rgba(200, 240, 74, 0.35);
+                background: rgba(200, 240, 74, 0.08);
+            }
+            .fb-btn-nav-gh:hover svg {
+                opacity: 1;
+                color: var(--accent);
+            }
+
+            #gh-stars {
+                display: none;
+                margin-left: 6px;
+                min-width: 22px;
+                height: 22px;
+                padding: 0 7px;
+                border-radius: 9999px;
+                background: var(--accent);
+                color: #0e0e0e;
+                font-size: 10px;
+                font-weight: 700;
+                text-align: center;
+                line-height: 22px;
+                white-space: nowrap;
+                transition: transform 0.2s ease;
+            }
+
+            #gh-stars:not(:empty) {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #gh-stars:not(:empty):hover {
+                transform: scale(1.08);
+            }
+
+            .fb-btn-gh-hero {
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.06em;
+                padding: 12px 22px;
+                border-radius: 2px;
+                border: 1px solid #3a3a3a;
+                background: transparent;
+                color: #c0c0b8;
+                text-decoration: none;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s;
+            }
+            .fb-btn-gh-hero::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.03) 0%,
+                    transparent 60%
+                );
+                pointer-events: none;
+            }
+            .fb-btn-gh-hero svg {
+                color: var(--muted);
+                transition: color 0.2s;
+                flex-shrink: 0;
+            }
+            .fb-btn-gh-hero:hover {
+                color: var(--text);
+                border-color: #555;
+            }
+            .fb-btn-gh-hero:hover svg {
+                color: var(--text);
+            }
+
+            .fb-install-command-box {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                max-width: 760px;
+                width: 100%;
+            }
+            .fb-install-command-field {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 14px;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                background: rgba(255, 255, 255, 0.04);
+                overflow: visible;
+                min-width: 0;
+                width: 100%;
+            }
+            .fb-install-command-text {
+                color: var(--text);
+                font-family: var(--mono);
+                font-size: 12px;
+                line-height: 1.4;
+                display: block;
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-break: normal;
+                flex: 1;
+            }
+            .fb-install-command-copy-btn {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 34px;
+                height: 34px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 4px;
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--text);
+                cursor: pointer;
+                transition:
+                    background 0.2s,
+                    border-color 0.2s,
+                    color 0.2s,
+                    transform 0.12s ease;
+                overflow: visible;
+            }
+            .fb-install-command-copy-btn.fb-copy-success {
+                background: rgba(200, 240, 74, 0.2);
+                border-color: rgba(200, 240, 74, 0.4);
+                color: #fff;
+                transform: translateY(-1px);
+            }
+            .fb-install-command-copy-btn.fb-copy-success .f7-icons {
+                color: #fff;
+            }
+            .fb-install-command-copy-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.24);
+            }
+            .fb-install-command-copy-btn .f7-icons {
+                font-size: 18px;
+            }
+            .fb-install-copy-tooltip {
+                position: absolute;
+                top: -36px;
+                left: 50%;
+                transform: translateX(-50%) translateY(4px);
+                background: rgba(22, 22, 22, 0.94);
+                color: var(--text);
+                font-size: 11px;
+                padding: 5px 10px;
+                border-radius: 999px;
+                opacity: 0;
+                pointer-events: none;
+                transition:
+                    opacity 0.2s ease,
+                    transform 0.2s ease;
+                white-space: nowrap;
+                box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+                z-index: 10;
+            }
+            .fb-install-command-copy-btn.fb-copy-success
+                .fb-install-copy-tooltip {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .fb-hero {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 56px 80px 0;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .fb-hero::before {
+                content: "";
+                position: absolute;
+                top: -200px;
+                right: -200px;
+                width: 700px;
+                height: 700px;
+                background: radial-gradient(
+                    circle,
+                    rgba(200, 240, 74, 0.04) 0%,
+                    transparent 65%
+                );
+                pointer-events: none;
+            }
+            .fb-hero::after {
+                content: "";
+                position: absolute;
+                bottom: -100px;
+                left: 30%;
+                width: 500px;
+                height: 500px;
+                background: radial-gradient(
+                    circle,
+                    rgba(74, 200, 240, 0.03) 0%,
+                    transparent 65%
+                );
+                pointer-events: none;
+            }
+
+            .fb-hero-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 80px;
+                align-items: center;
+                justify-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .fb-hero-grid > div:first-child {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                width: 100%;
+                max-width: 780px;
+            }
+
+            .fb-hero-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .fb-hero-eyebrow {
+                color: var(--muted);
+                margin-bottom: 20px;
+            }
+            .fb-hero-eyebrow::before {
+                content: "";
+                width: 24px;
+                height: 1px;
+                background: var(--accent);
+            }
+
+            .fb-hero h1 {
+                font-family: var(--serif);
+                font-size: 76px;
+                font-style: italic;
+                font-weight: 200;
+                line-height: 0.95;
+                letter-spacing: -0.04em;
+                margin-bottom: 28px;
+            }
+            .fb-hero h1 .fb-accent {
+                color: var(--accent);
+            }
+
+            .fb-hero-desc {
+                color: var(--muted);
+                font-size: 13.5px;
+                line-height: 1.9;
+                max-width: 440px;
+                margin-bottom: 36px;
+            }
+            .fb-hero-desc strong {
+                color: var(--text);
+                font-weight: 400;
+            }
+
+            .fb-hero-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .fb-mock-ui {
+                width: min(100%, 980px);
+                margin: 0 auto;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                overflow: hidden;
+                box-shadow:
+                    0 40px 80px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(255, 255, 255, 0.03);
+                transform: perspective(1000px) rotateY(-4deg) rotateX(2deg);
+                transition: transform 0.4s ease;
+            }
+            .fb-mock-ui:hover {
+                transform: perspective(1000px) rotateY(-1deg) rotateX(0deg);
+            }
+
+            .fb-mock-titlebar {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 10px 14px;
+                background: var(--surface2);
+                border-bottom: 1px solid var(--border);
+            }
+            .fb-mock-dot {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+            }
+            .fb-mock-dot:nth-child(1) {
+                background: #f04a4a;
+            }
+            .fb-mock-dot:nth-child(2) {
+                background: var(--accent2);
+            }
+            .fb-mock-dot:nth-child(3) {
+                background: var(--accent);
+            }
+
+            .fb-mock-url {
+                margin-left: 8px;
+                flex: 1;
+                background: var(--border);
+                border-radius: 3px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                padding: 0 8px;
+                font-size: 9px;
+                color: var(--muted);
+                letter-spacing: 0.05em;
+            }
+
+            .fb-mock-kbd {
+                display: inline-block;
+                font-size: 8px;
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                border-bottom: 2px solid var(--border);
+                padding: 1px 5px;
+                border-radius: 2px;
+                color: var(--muted);
+                font-family: var(--mono);
+            }
+
+            .fb-mock-body {
+                display: grid;
+                grid-template-columns: 160px 200px 1fr;
+                height: 320px;
+            }
+            .fb-mock-pane {
+                border-right: 1px solid var(--border2);
+                overflow: hidden;
+            }
+            .fb-mock-pane:last-child {
+                border-right: none;
+            }
+
+            .fb-mock-pane-header {
+                padding: 8px 12px;
+                border-bottom: 1px solid var(--border2);
+                font-size: 9px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--muted);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .fb-mock-pane-header span.fb-c {
+                color: var(--accent);
+            }
+
+            .fb-mock-feed-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 12px;
+                font-size: 10px;
+                color: var(--muted);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            }
+            .fb-mock-feed-item.fb-active {
+                background: rgba(200, 240, 74, 0.06);
+                color: var(--text);
+            }
+            .fb-mock-feed-dot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--border);
+                flex-shrink: 0;
+            }
+            .fb-mock-feed-dot.fb-live {
+                background: var(--accent);
+                box-shadow: 0 0 4px rgba(200, 240, 74, 0.5);
+            }
+            .fb-mock-feed-badge {
+                margin-left: auto;
+                font-size: 8px;
+                background: rgba(200, 240, 74, 0.12);
+                color: var(--accent);
+                padding: 1px 5px;
+                border-radius: 2px;
+            }
+
+            .fb-mock-article-item {
+                padding: 10px 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+                font-size: 9.5px;
+                color: var(--muted);
+            }
+            .fb-mock-article-item.fb-active {
+                background: rgba(255, 255, 255, 0.03);
+            }
+            .fb-mock-article-title {
+                color: var(--text);
+                margin-bottom: 3px;
+                font-size: 10px;
+                line-height: 1.4;
+            }
+            .fb-mock-article-item.fb-read .fb-mock-article-title {
+                color: var(--muted);
+            }
+            .fb-mock-article-meta {
+                display: flex;
+                gap: 8px;
+                font-size: 8.5px;
+            }
+
+            .fb-mock-reader-content {
+                padding: 16px;
+            }
+            .fb-mock-reader-title {
+                font-family: var(--serif);
+                font-size: 13px;
+                font-style: italic;
+                color: var(--text);
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+            .fb-mock-reader-meta {
+                font-size: 9px;
+                color: var(--muted);
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid var(--border2);
+            }
+            .fb-mock-line {
+                height: 6px;
+                background: var(--border2);
+                border-radius: 3px;
+                margin-bottom: 6px;
+            }
+            .fb-mock-line.fb-w100 {
+                width: 100%;
+            }
+            .fb-mock-line.fb-w90 {
+                width: 90%;
+            }
+            .fb-mock-line.fb-w75 {
+                width: 75%;
+            }
+            .fb-mock-line.fb-w60 {
+                width: 60%;
+            }
+            .fb-mock-line.fb-w40 {
+                width: 40%;
+            }
+
+            .fb-section-wrap {
+                padding: 96px 80px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .fb-section-eyebrow {
+                font-size: 9px;
+                letter-spacing: 0.25em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .fb-section-eyebrow::after {
+                content: "";
+                width: 32px;
+                height: 1px;
+                background: var(--accent);
+            }
+
+            h2.fb-section-title {
+                font-family: var(--serif);
+                font-size: 44px;
+                font-style: italic;
+                font-weight: 200;
+                letter-spacing: -0.03em;
+                line-height: 1.1;
+                margin-bottom: 16px;
+            }
+            h2.fb-section-title em {
+                color: var(--accent);
+                font-style: italic;
+            }
+
+            .fb-section-sub {
+                color: var(--muted);
+                font-size: 13px;
+                max-width: 520px;
+                line-height: 1.8;
+                margin-bottom: 56px;
+            }
+
+            .fb-feature-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1px;
+                background: var(--border);
+                border: 1px solid var(--border);
+            }
+
+            .fb-feature-card {
+                background: var(--bg);
+                padding: 28px 28px 32px;
+                position: relative;
+                overflow: hidden;
+                transition: background 0.2s;
+            }
+            .fb-feature-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: transparent;
+                transition: background 0.2s;
+            }
+            .fb-feature-card:hover {
+                background: var(--surface);
+            }
+            .fb-feature-card:hover::before {
+                background: var(--accent);
+            }
+
+            .fb-feature-icon-wrap {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 18px;
+            }
+            .fb-feature-icon {
+                width: 38px;
+                height: 38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                background: var(--surface);
+                transition:
+                    border-color 0.2s,
+                    background 0.2s;
+            }
+            .fb-feature-card:hover .fb-feature-icon {
+                border-color: rgba(200, 240, 74, 0.3);
+                background: rgba(200, 240, 74, 0.06);
+            }
+            .fb-feature-icon i {
+                font-size: 18px;
+                color: var(--muted);
+                transition: color 0.2s;
+            }
+            .fb-feature-card:hover .fb-feature-icon i {
+                color: var(--accent);
+            }
+            .fb-feature-tag {
+                font-size: 9px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                padding: 4px 8px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--muted);
+                min-height: 22px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .fb-feature-tag.fb-amber {
+                color: var(--accent2);
+                border: 1px solid rgba(240, 168, 74, 0.2);
+            }
+
+            .fb-feature-name {
+                font-family: var(--mono);
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                color: var(--text);
+                margin-bottom: 10px;
+            }
+            .fb-feature-desc {
+                font-size: 12px;
+                color: var(--muted);
+                line-height: 1.7;
+            }
+
+            .fb-how-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                margin-top: 0;
+            }
+
+            .fb-how-item {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+                border-top: 1px solid var(--border2);
+                padding: 0;
+                position: relative;
+                transition: border-color 0.2s;
+            }
+
+            .fb-how-item:hover {
+                border-top-color: var(--accent);
+            }
+
+            .fb-how-item:last-child {
+                border-bottom: 1px solid var(--border2);
+            }
+            .fb-how-item:last-child:hover {
+                border-bottom-color: var(--accent);
+            }
+
+            .fb-how-left {
+                padding: 36px 48px 36px 0;
+                border-right: 1px solid var(--border2);
+                display: flex;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .fb-how-num {
+                font-family: var(--serif);
+                font-size: 72px;
+                font-style: italic;
+                font-weight: 200;
+                line-height: 0.85;
+                letter-spacing: -0.04em;
+                color: var(--border);
+                flex-shrink: 0;
+                transition: color 0.25s;
+                user-select: none;
+            }
+
+            .fb-how-item:hover .fb-how-num {
+                color: var(--accent);
+            }
+
+            .fb-how-title {
+                font-family: var(--serif);
+                font-size: 22px;
+                font-style: italic;
+                font-weight: 300;
+                color: var(--text);
+                letter-spacing: -0.02em;
+                line-height: 1.2;
+                padding-top: 6px;
+            }
+
+            .fb-how-right {
+                padding: 36px 0 36px 48px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .fb-how-desc {
+                font-size: 12.5px;
+                color: var(--muted);
+                line-height: 1.85;
+                max-width: 380px;
+            }
+
+            .fb-how-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 14px;
+                font-size: 9.5px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--muted);
+                opacity: 0;
+                transform: translateX(-6px);
+                transition:
+                    opacity 0.2s,
+                    transform 0.2s;
+            }
+
+            .fb-how-tag i {
+                font-size: 11px;
+                color: var(--accent);
+            }
+
+            .fb-how-item:hover .fb-how-tag {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            @media (max-width: 900px) {
+                .fb-how-item {
+                    grid-template-columns: 1fr;
+                }
+                .fb-how-left {
+                    padding: 28px 0 0;
+                    border-right: none;
+                }
+                .fb-how-right {
+                    padding: 12px 0 28px;
+                }
+                .fb-how-num {
+                    font-size: 52px;
+                }
+            }
+
+            .fb-key-demo {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 48px;
+                margin-top: 48px;
+            }
+
+            .fb-key-group-title {
+                font-size: 9px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--accent2);
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .fb-key-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 7px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+            }
+            .fb-key-row:last-child {
+                border-bottom: none;
+            }
+            .fb-key-combo {
+                display: flex;
+                gap: 4px;
+            }
+
+            kbd {
+                font-family: var(--mono);
+                font-size: 10px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-bottom: 2px solid var(--border);
+                padding: 2px 7px;
+                border-radius: 3px;
+                color: var(--text);
+            }
+
+            .fb-key-desc {
+                font-size: 11px;
+                color: var(--muted);
+            }
+
+            footer {
+                padding: 32px 80px;
+                border-top: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .fb-footer-copyright {
+                font-size: 11px;
+                letter-spacing: 0.04em;
+                color: var(--muted);
+            }
+            .fb-footer-copyright .fb-footer-brand {
+                color: var(--muted);
+            }
+            .fb-footer-right {
+                font-size: 11px;
+                color: var(--muted);
+                letter-spacing: 0.04em;
+            }
+            .fb-footer-right a,
+            .fb-footer-tech-accent {
+                color: var(--accent);
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+            .fb-footer-right a:hover,
+            .fb-footer-tech-accent:hover {
+                color: #ffffff;
+            }
+
+            .fb-full-divider {
+                width: 100%;
+                height: 1px;
+                background: var(--border);
+            }
+
+            /* Animations */
+            @keyframes fadeUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .fb-fade-up {
+                opacity: 0;
+                animation: fadeUp 0.6s ease forwards;
+            }
+            .fb-fade-up-1 {
+                animation-delay: 0.1s;
+            }
+            .fb-fade-up-2 {
+                animation-delay: 0.2s;
+            }
+            .fb-fade-up-3 {
+                animation-delay: 0.35s;
+            }
+            .fb-fade-up-4 {
+                animation-delay: 0.5s;
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+            .fb-cursor {
+                display: inline-block;
+                width: 2px;
+                height: 0.85em;
+                background: var(--accent);
+                vertical-align: middle;
+                margin-left: 2px;
+                animation: blink 1.1s step-end infinite;
+            }
+
+            /*  Mobile */
+            @media (max-width: 900px) {
+                nav {
+                    padding: 0 24px;
+                }
+                .fb-hero {
+                    padding: 56px 24px 0;
+                }
+                .fb-hero-grid {
+                    grid-template-columns: 1fr;
+                    gap: 40px;
+                }
+                .fb-hero-desc {
+                    max-width: 100%;
+                }
+                .fb-install-command-box {
+                    max-width: 100%;
+                    width: 100%;
+                }
+                .fb-install-command-field {
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    padding: 12px;
+                }
+                .fb-install-command-text {
+                    white-space: normal;
+                    overflow: visible;
+                    word-break: break-word;
+                }
+                .fb-install-command-copy-btn {
+                    margin-left: auto;
+                }
+                .fb-mock-ui {
+                    display: none;
+                }
+                .fb-section-wrap {
+                    padding: 64px 24px;
+                }
+                .fb-feature-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .fb-key-demo {
+                    grid-template-columns: 1fr;
+                }
+                footer {
+                    flex-direction: column;
+                    gap: 12px;
+                    text-align: center;
+                    padding: 24px;
+                }
+                h2.fb-section-title {
+                    font-size: 32px;
+                }
+                .fb-hero h1 {
+                    font-size: 52px;
+                }
+            }
+            @media (max-width: 600px) {
+                .fb-hero h1 {
+                    font-size: 46px;
+                    margin-bottom: 20px;
+                }
+                .fb-hero-eyebrow {
+                    font-size: 8.5px;
+                    letter-spacing: 0.15em;
+                    line-height: 1.6;
+                }
+                .fb-hero-eyebrow::before {
+                    width: 16px;
+                }
+                .fb-hero-desc {
+                    font-size: 13px;
+                    margin-bottom: 32px;
+                }
+                .fb-feature-grid {
+                    grid-template-columns: 1fr;
+                }
+                .fb-hero-actions {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Nav -->
+        <nav>
+            <a href="/" class="fb-nav-logo">
+                <div class="fb-logo-mark">
+                    <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 32 32"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect
+                            x="3"
+                            y="22"
+                            width="26"
+                            height="4.5"
+                            rx="1.5"
+                            fill="#c8f04a"
+                        ></rect>
+                        <rect
+                            x="3"
+                            y="15"
+                            width="18"
+                            height="3.5"
+                            rx="1.5"
+                            fill="#c8f04a"
+                            opacity="0.65"
+                        ></rect>
+                        <rect
+                            x="3"
+                            y="9"
+                            width="11"
+                            height="3"
+                            rx="1.5"
+                            fill="#c8f04a"
+                            opacity="0.35"
+                        ></rect>
+                        <circle
+                            cx="26"
+                            cy="10.5"
+                            r="4"
+                            fill="#c8f04a"
+                            opacity="0.9"
+                        ></circle>
+                    </svg>
+                </div>
+            </a>
+            <div>
+                <a
+                    href="https://github.com/Daniel-Brai/feedbase"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="fb-btn fb-btn-nav-gh"
+                    aria-label="GitHub"
+                >
+                    <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.796 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+                        />
+                    </svg>
+                    Star on GitHub
+                    <span id="gh-stars"></span>
+                </a>
+                <script>
+                    fetch("https://api.github.com/repos/Daniel-Brai/feedbase")
+                        .then((r) => r.json())
+                        .then((d) => {
+                            const count = d.stargazers_count;
+                            if (count !== undefined) {
+                                document.getElementById(
+                                    "gh-stars",
+                                ).textContent =
+                                    count >= 1000
+                                        ? (count / 1000).toFixed(1) + "k"
+                                        : count;
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById("gh-stars").textContent =
+                                "";
+                        });
+                </script>
+            </div>
+        </nav>
+
+        <!-- Hero  -->
+        <div class="fb-hero">
+            <div class="fb-hero-grid">
+                <div>
+                    <div class="fb-hero-eyebrow fb-fade-up fb-fade-up-1">
+                        Open-source · Self-hosted · RSS Platform
+                    </div>
+                    <h1 class="fb-fade-up fb-fade-up-2">
+                        Feed<span class="fb-accent">base</span>
+                    </h1>
+                    <p class="fb-hero-desc fb-fade-up fb-fade-up-3">
+                        A <strong>keyboard-first RSS reader</strong> built for
+                        power users. Self-host your own instance. Ships solo,
+                        scales to a team.
+                    </p>
+                    <div class="fb-hero-actions fb-fade-up fb-fade-up-4">
+                        <div class="fb-install-command-box">
+                            <div class="fb-install-command-field">
+                                <code class="fb-install-command-text">
+                                    curl -fsSL
+                                    https://daniel-brai.github.io/feedbase/install.sh |
+                                    bash
+                                </code>
+                                <button
+                                    id="install-copy-btn"
+                                    class="fb-install-command-copy-btn"
+                                    type="button"
+                                    aria-label="Copy install command"
+                                    title="Copy install command"
+                                >
+                                    <i class="f7-icons">doc_on_clipboard</i>
+                                    <span
+                                        class="fb-install-copy-tooltip"
+                                        aria-hidden="true"
+                                        >Copied</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fb-fade-up fb-fade-up-4">
+                    <div class="fb-mock-ui">
+                        <div class="fb-mock-titlebar">
+                            <div class="fb-mock-dot"></div>
+                            <div class="fb-mock-dot"></div>
+                            <div class="fb-mock-dot"></div>
+                            <div class="fb-mock-url">
+                                localhost:5555 — Feedbase
+                            </div>
+                            <span class="fb-mock-kbd">?</span>
+                        </div>
+                        <div class="fb-mock-body">
+                            <div class="fb-mock-pane">
+                                <div class="fb-mock-pane-header">
+                                    Feeds <span class="fb-c">12</span>
+                                </div>
+                                <div class="fb-mock-feed-item fb-active">
+                                    <div class="fb-mock-feed-dot fb-live"></div>
+                                    Hacker News
+                                    <span class="fb-mock-feed-badge">4</span>
+                                </div>
+                                <div class="fb-mock-feed-item">
+                                    <div class="fb-mock-feed-dot"></div>
+                                    The Verge
+                                    <span class="fb-mock-feed-badge">2</span>
+                                </div>
+                                <div class="fb-mock-feed-item">
+                                    <div class="fb-mock-feed-dot"></div>
+                                    Lobsters
+                                </div>
+                                <div class="fb-mock-feed-item">
+                                    <div class="fb-mock-feed-dot"></div>
+                                    FastAPI Blog
+                                </div>
+                                <div class="fb-mock-feed-item">
+                                    <div class="fb-mock-feed-dot"></div>
+                                    Elixir Digest
+                                </div>
+                                <div class="fb-mock-feed-item">
+                                    <div class="fb-mock-feed-dot"></div>
+                                    Supabase News
+                                </div>
+                            </div>
+                            <div class="fb-mock-pane">
+                                <div class="fb-mock-pane-header">
+                                    Articles <span class="fb-c">4 unread</span>
+                                </div>
+                                <div class="fb-mock-article-item fb-active">
+                                    <div class="fb-mock-article-title">
+                                        Build a Compiler in Haskell from Scratch
+                                    </div>
+                                    <div class="fb-mock-article-meta">
+                                        <span>2h ago</span
+                                        ><span
+                                            ><i
+                                                class="f7-icons"
+                                                style="font-size: 10px"
+                                                >star_fill</i
+                                            ></span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="fb-mock-article-item">
+                                    <div class="fb-mock-article-title">
+                                        HTMX 4.0 Released: What's New
+                                    </div>
+                                    <div class="fb-mock-article-meta">
+                                        <span>4h ago</span>
+                                    </div>
+                                </div>
+                                <div class="fb-mock-article-item fb-read">
+                                    <div class="fb-mock-article-title">
+                                        FastAPI Performance Deep Dive
+                                    </div>
+                                    <div class="fb-mock-article-meta">
+                                        <span>1d ago</span>
+                                    </div>
+                                </div>
+                                <div class="fb-mock-article-item fb-read">
+                                    <div class="fb-mock-article-title">
+                                        Postgres Full-Text Search Guide
+                                    </div>
+                                    <div class="fb-mock-article-meta">
+                                        <span>2d ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fb-mock-pane">
+                                <div class="fb-mock-pane-header">Reader</div>
+                                <div class="fb-mock-reader-content">
+                                    <div class="fb-mock-reader-title">
+                                        Build a Compiler in Haskell from Scratch
+                                    </div>
+                                    <div class="fb-mock-reader-meta">
+                                        Hacker News · 2 hours ago
+                                    </div>
+                                    <div class="fb-mock-line fb-w100"></div>
+                                    <div class="fb-mock-line fb-w90"></div>
+                                    <div class="fb-mock-line fb-w100"></div>
+                                    <div class="fb-mock-line fb-w75"></div>
+                                    <br />
+                                    <div class="fb-mock-line fb-w100"></div>
+                                    <div class="fb-mock-line fb-w90"></div>
+                                    <div class="fb-mock-line fb-w60"></div>
+                                    <br />
+                                    <div class="fb-mock-line fb-w100"></div>
+                                    <div class="fb-mock-line fb-w40"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fb-full-divider"></div>
+
+        <!-- Features -->
+        <div class="fb-section-wrap" id="features">
+            <div class="fb-section-eyebrow">Features</div>
+            <h2 class="fb-section-title">
+                Everything you need.<br /><em>Nothing you don't.</em>
+            </h2>
+            <p class="fb-section-sub">
+                Built for the person who wants full control of their feeds,
+                articles, state, and API all on your own hardware.
+            </p>
+
+            <div class="fb-feature-grid">
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">bolt_fill</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">Smart Feed Fetching</div>
+                    <div class="fb-feature-desc">
+                        Respects server caching headers to keep bandwidth
+                        minimal. Exponential backoff on failures.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">doc_plaintext</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">Full-Text Extraction</div>
+                    <div class="fb-feature-desc">
+                        When feeds only serve summaries, Feedbase fetches and
+                        extracts the full article such that it is clean,
+                        readable, and no longer truncated.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">search</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">Fuzzy Search</div>
+                    <div class="fb-feature-desc">
+                        Search across every article you've subscribed to using
+                        titles, summaries, and full content.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">keyboard</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">Vim-like Keybindings</div>
+                    <div class="fb-feature-desc">
+                        Navigate feeds, articles, and the reader pane without
+                        touching the mouse. Full modal keybinding system with
+                        two-key sequences.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">arrow_left_right_circle</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">REST API</div>
+                    <div class="fb-feature-desc">
+                        REST API for integrations with complete access to your
+                        feeds, articles, and reader state.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">apps</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">
+                        Third-Party Client Support
+                    </div>
+                    <div class="fb-feature-desc">
+                        Connect Reeder and other RSS clients directly to
+                        Feedbase using the Fever API compatibility layer.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">dot_radiowaves_left_and_right</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">Live Updates</div>
+                    <div class="fb-feature-desc">
+                        New articles and unread counts update in your browser
+                        automatically. No manual refreshing, the changes just
+                        appear instantly.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">arrow_up_arrow_down_square</i>
+                        </div>
+                    </div>
+                    <div class="fb-feature-name">OPML Import & Export</div>
+                    <div class="fb-feature-desc">
+                        Bring your subscriptions from any reader. Export at any
+                        time. Folder structure is preserved on both import and
+                        export.
+                    </div>
+                </div>
+                <div class="fb-feature-card">
+                    <div class="fb-feature-icon-wrap">
+                        <div class="fb-feature-icon">
+                            <i class="f7-icons">person_2</i>
+                        </div>
+                        <span class="fb-feature-tag fb-amber">Coming soon</span>
+                    </div>
+                    <div class="fb-feature-name">Multi-User Ready</div>
+                    <div class="fb-feature-desc">
+                        Ships as a personal reader. It can grow to serve a team
+                        or family with a single config change no migrations, no
+                        rewrites needed. Each user has their own reading state
+                        and settings.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fb-full-divider"></div>
+
+        <!-- How it works -->
+        <div
+            id="how"
+            style="padding: 96px 80px; max-width: 1200px; margin: 0 auto"
+        >
+            <div class="fb-section-eyebrow">How it works</div>
+            <h2 class="fb-section-title">
+                Simple by design.<br /><em>Powerful underneath.</em>
+            </h2>
+            <p class="fb-section-sub">
+                Feedbase does the work in the background so your reading
+                experience stays fast and uninterrupted.
+            </p>
+
+            <div class="fb-how-list">
+                <div class="fb-how-item">
+                    <div class="fb-how-left">
+                        <div class="fb-how-num">1</div>
+                        <div class="fb-how-title">
+                            Subscribe to any feed or site
+                        </div>
+                    </div>
+                    <div class="fb-how-right">
+                        <div class="fb-how-desc">
+                            Paste a feed URL or any webpage address. Feedbase
+                            finds the feed automatically and pulls in articles
+                            right away.
+                        </div>
+                        <div class="fb-how-tag">
+                            <i class="f7-icons">plus_circle</i> Instant first
+                            fetch
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fb-how-item">
+                    <div class="fb-how-left">
+                        <div class="fb-how-num">2</div>
+                        <div class="fb-how-title">
+                            Feeds are polled automatically
+                        </div>
+                    </div>
+                    <div class="fb-how-right">
+                        <div class="fb-how-desc">
+                            A background scheduler checks every feed you follow
+                            on its own interval. New articles are fetched,
+                            deduplicated, and stored so that no action is needed
+                            from you.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fb-how-item">
+                    <div class="fb-how-left">
+                        <div class="fb-how-num">3</div>
+                        <div class="fb-how-title">
+                            Your reading state is yours alone
+                        </div>
+                    </div>
+                    <div class="fb-how-right">
+                        <div class="fb-how-desc">
+                            Read, starred, and bookmarked state is tracked
+                            per-user. Every person on the same instance has
+                            their own independent reading list.
+                        </div>
+                        <div class="fb-how-tag">
+                            <i class="f7-icons">person</i> Fully isolated per
+                            user
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fb-how-item">
+                    <div class="fb-how-left">
+                        <div class="fb-how-num">4</div>
+                        <div class="fb-how-title">
+                            New articles appear without refreshing
+                        </div>
+                    </div>
+                    <div class="fb-how-right">
+                        <div class="fb-how-desc">
+                            When new content arrives, your unread counts and
+                            article list update live. Open a tab in the morning
+                            and your feeds are already fresh.
+                        </div>
+                        <div class="fb-how-tag">
+                            <i class="f7-icons"
+                                >dot_radiowaves_left_and_right</i
+                            >
+                            Always up to date
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fb-full-divider"></div>
+
+        <div class="fb-section-wrap" id="keybindings">
+            <div class="fb-section-eyebrow">Keybindings</div>
+            <h2 class="fb-section-title">
+                Vim-style.<br /><em>Three modes. One muscle memory.</em>
+            </h2>
+            <p class="fb-section-sub">
+                Navigate feeds, articles, and the reader without lifting your
+                hands from the keyboard. Two-key sequences work exactly as you'd
+                expect.
+            </p>
+
+            <div class="fb-key-demo">
+                <div>
+                    <div class="fb-key-group-title">Navigation</div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>j</kbd><kbd>k</kbd></div>
+                        <div class="fb-key-desc">Next / previous article</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>J</kbd><kbd>K</kbd></div>
+                        <div class="fb-key-desc">Next / previous feed</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>g</kbd><kbd>g</kbd></div>
+                        <div class="fb-key-desc">Scroll to top</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>G</kbd></div>
+                        <div class="fb-key-desc">Scroll to bottom</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>h</kbd></div>
+                        <div class="fb-key-desc">Home</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>c</kbd></div>
+                        <div class="fb-key-desc">Settings</div>
+                    </div>
+
+                    <div class="fb-key-group-title" style="margin-top: 28px">
+                        Go-to shortcuts
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>g</kbd><kbd>a</kbd></div>
+                        <div class="fb-key-desc">All articles</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>g</kbd><kbd>s</kbd></div>
+                        <div class="fb-key-desc">Starred</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>g</kbd><kbd>b</kbd></div>
+                        <div class="fb-key-desc">Bookmarks</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>g</kbd><kbd>u</kbd></div>
+                        <div class="fb-key-desc">Unread</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>g</kbd><kbd>t</kbd></div>
+                        <div class="fb-key-desc">Today</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="fb-key-group-title">Actions</div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>r</kbd></div>
+                        <div class="fb-key-desc">Toggle read</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>s</kbd></div>
+                        <div class="fb-key-desc">Toggle star</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>b</kbd></div>
+                        <div class="fb-key-desc">Bookmark</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>o</kbd></div>
+                        <div class="fb-key-desc">Open Original URL</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>y</kbd><kbd>y</kbd></div>
+                        <div class="fb-key-desc">Copy Original URL</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>d</kbd><kbd>d</kbd></div>
+                        <div class="fb-key-desc">Unsubscribe feed</div>
+                    </div>
+
+                    <div class="fb-key-group-title" style="margin-top: 28px">
+                        UI
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>u</kbd></div>
+                        <div class="fb-key-desc">Add feed</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>/</kbd></div>
+                        <div class="fb-key-desc">Search</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>n</kbd><kbd>N</kbd></div>
+                        <div class="fb-key-desc">Next / prev result</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>?</kbd></div>
+                        <div class="fb-key-desc">This overlay</div>
+                    </div>
+                    <div class="fb-key-row">
+                        <div class="fb-key-combo"><kbd>Esc</kbd></div>
+                        <div class="fb-key-desc">Close / back</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fb-full-divider"></div>
+
+        <footer>
+            <div>
+                <div class="fb-footer-copyright">
+                    © <span id="footer-year"></span>
+                    <span class="fb-footer-brand">Feedbase</span>
+                </div>
+            </div>
+            <div class="fb-footer-right">
+                Built with
+                <a
+                    href="https://fastapi.tiangolo.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >FastAPI</a
+                >
+                +
+                <a
+                    href="https://htmx.org"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >HTMX</a
+                >
+                +
+                <a
+                    href="https://alpinejs.dev"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="fb-footer-tech-accent"
+                    >Alpine.js</a
+            </div>
+        </footer>
+
+        <script>
+            const navLinks = document.querySelectorAll(".fb-nav-links a");
+            const sections = document.querySelectorAll("[id]");
+
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            navLinks.forEach((l) => {
+                                l.classList.toggle(
+                                    "active",
+                                    l.getAttribute("href") ===
+                                        "#" + entry.target.id,
+                                );
+                            });
+                        }
+                    });
+                },
+                { rootMargin: "-40% 0px -50% 0px" },
+            );
+
+            sections.forEach((s) => io.observe(s));
+
+            const cards = document.querySelectorAll(
+                ".fb-feature-card, .fb-how-item",
+            );
+            const aio = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry, i) => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = "0";
+                            entry.target.style.transform = "translateY(16px)";
+                            entry.target.style.transition = `opacity 0.45s ease ${(i % 6) * 0.07}s, transform 0.45s ease ${(i % 6) * 0.07}s`;
+                            requestAnimationFrame(() => {
+                                entry.target.style.opacity = "1";
+                                entry.target.style.transform = "translateY(0)";
+                            });
+                            aio.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.08 },
+            );
+
+            cards.forEach((el) => {
+                el.style.opacity = "0";
+                aio.observe(el);
+            });
+
+            const installCommand =
+                "curl -fsSL https://daniel-brai.github.io/feedbase/install.sh | bash";
+            const installCopyBtn = document.getElementById("install-copy-btn");
+            if (installCopyBtn) {
+                installCopyBtn.addEventListener("click", async () => {
+                    try {
+                        await navigator.clipboard.writeText(installCommand);
+                        installCopyBtn.classList.add("fb-copy-success");
+                        setTimeout(() => {
+                            installCopyBtn.classList.remove("fb-copy-success");
+                        }, 2000);
+                    } catch (err) {
+                        console.error("Copy failed", err);
+                    }
+                });
+            }
+
+            const footerYear = document.getElementById("footer-year");
+            if (footerYear) {
+                footerYear.textContent = new Date().getFullYear();
+            }
+        </script>
+    </body>
+</html>

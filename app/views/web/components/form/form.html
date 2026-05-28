@@ -1,0 +1,21 @@
+{# type:var form: str | Any, values: dict | None, config_overrides: dict | None, use_cls: bool #} 
+
+{% if use_cls is defined and use_cls is true and form is not string %}
+    {% set form_name = form.get_form_name() %}
+{% else %}
+    {% set form_name = form %}
+{% endif %}
+
+{% if form_has_alert(form_name) %}
+<div class="fb-mb-6 fb-flex fb-flex-col fb-gap-4">
+    {% for alert_id in get_form_alert_indicators(form_name) %}
+    <div id="{{ alert_id }}"></div>
+    {% endfor %}
+</div>
+{% endif %} 
+
+{% if use_cls is defined and use_cls is true and form is not string %}
+    {{ render_form_cls(form=form) }}
+{% else %}
+    {{ render_form(form_name=form_name, values=values if values is defined else None, config_overrides=config_overrides if config_overrides is defined else None) }}
+{% endif %}

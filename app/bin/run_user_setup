@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import asyncio
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+
+from bootstrap.auth import configure_auth
+from helpers import generate_fever_key
+from lib.auth import create_user
+from lib.logger import get_logger
+from settings import settings
+
+logger = get_logger("bin.run_user_setup")
+
+
+configure_auth()
+
+if __name__ == "__main__":
+    logger.info("Setting up superuser...")
+
+    asyncio.run(
+        create_user(
+            {
+                "name": settings.APP_SUPERUSER_NAME,
+                "email": settings.APP_SUPERUSER_EMAIL,
+                "password": settings.APP_SUPERUSER_PASSWORD,
+                "is_active": True,
+                "email_verified": True,
+                "roles": ["superadmin"],
+                "fever_key": generate_fever_key(settings.APP_SUPERUSER_EMAIL, settings.APP_SUPERUSER_PASSWORD),
+                "avatar": None,
+                "preferences": {
+                    "digest_frequency": None,
+                    "digest_hour": 0,
+                    "allow_push_notifications": False,
+                    "mark_article_as_unread_if_updated": False,
+                    "last_digest_sent": None,
+                },
+            }
+        )
+    )
+    logger.info("Setup complete.")

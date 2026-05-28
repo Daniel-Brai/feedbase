@@ -1,0 +1,12 @@
+<input
+    type="hidden"
+    id="{{ form.name }}-{{ field.name }}"
+    name="{{ field.name }}"
+    value="{{ field.value | default('') }}"
+    {% if field.required %}required{% endif %}
+    {% if field.disabled %}disabled{% endif %}
+    {% if field.readonly %}readonly{% endif %}
+    {% if 'data-enable-on-changed-value' in field %}
+    data-enable-on-changed-value="{{ field['data-enable-on-changed-value'] }}"
+    {% endif %}
+/>

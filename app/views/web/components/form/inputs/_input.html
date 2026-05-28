@@ -1,0 +1,16 @@
+<div class="fb-field">
+    {% if field.label %}<label
+        for="{{ form.name }}-{{ field.name }}"
+        class="fb-label {% if field.label_css %}{{ field.label_css }}{% endif %}"
+    >
+        {{ _t(field.label) }} {% if field.required %}
+        <span class="fb-label-required" title="Required field">*</span>{% endif
+        %}
+    </label>
+    {% endif %} {% block input %} {% endblock %}
+
+    <div id="{{ field.name }}-error" class="fb-field-error"></div>
+    {% if field.help_text %}<span class="fb-hint"
+        >{{ _t(field.help_text) }}</span
+    >{% endif %}
+</div>

@@ -1,0 +1,74 @@
+{# typja:var user: User, sidebar: dict[str, Any] #}
+
+<section
+    x-show="activeTab === 'fever'"
+    x-cloak
+    class="fb-rounded-lg fb-bg-surface2 fb-p-4 fb-border fb-border-border fb-flex fb-flex-col fb-gap-4"
+>
+    <div>
+        <h1 class="fb-text-xl fb-font-medium fb-text-text">
+            {{ _t('settings.fever_title') }}
+        </h1>
+        <p class="fb-text-sm fb-text-muted fb-mt-2 fb-mb-4">
+            {{ _t('settings.fever_description') }}
+        </p>
+    </div>
+
+    <div
+        class="fb-rounded-lg fb-bg-surface fb-p-4 fb-border fb-border-border fb-mb-4"
+    >
+        <div
+            class="fb-flex fb-flex-col fb-gap-3 fb-items-start fb-justify-between"
+        >
+            <div>
+                <h2
+                    class="fb-text-base fb-font-medium fb-text-text"
+                >
+                    {{ _t('settings.fever_key_label') }}
+                </h2>
+                <p class="fb-text-sm fb-text-muted fb-mt-2">
+                    {{ _t('settings.fever_key_hint', fever_endpoint='<a href="/fever" class="fb-text-accent" target="_blank" rel="noopener">/fever</a>', docs_endpoint='<a href="/docs" class="fb-text-accent" target="_blank" rel="noopener">/docs</a>') | safe }}
+                </p>
+            </div>
+        </div>
+
+        {% if user.fever_key %}
+        <div
+            class="fb-mt-4 fb-input-icon-wrap fb-w-full"
+            x-data="{ showKey: false }"
+        >
+            <input
+                id="fever-key"
+                class="fb-input fb-w-full"
+                type="password"
+                readonly
+                x-bind:type="showKey ? 'text' : 'password'"
+                value="{{ user.fever_key }}"
+            />
+            <button
+                type="button"
+                class="fb-input-action"
+                aria-label="{{ _t('settings.fever_toggle_visibility') | default('Toggle visibility') }}"
+                title="{{ _t('settings.fever_toggle_visibility') | default('Toggle visibility') }}"
+                @click="showKey = !showKey"
+            >
+                <i class="f7-icons fb-text-lg" x-text="showKey ? 'eye_slash' : 'eye'"></i>
+            </button>
+            <button
+                type="button"
+                class="fb-input-action"
+                style="right: 2.75rem;"
+                @click="window.ClipboardUtils?.copyText('{{ user.fever_key }}').then((copied) => { if (copied && window.Toast) window.Toast.show({ type: 'success', message: '{{ _t("settings.fever_copy_success") }}', position: 'bottom-middle', duration: 4000 }); });"
+                aria-label="{{ _t('settings.fever_copy_key') }}"
+                title="{{ _t('settings.fever_copy_key') }}"
+            >
+                <i class="f7-icons fb-text-lg">doc_on_clipboard</i>
+            </button>
+        </div>
+        {% else %}
+        <p class="fb-text-sm fb-text-muted fb-mt-4">
+            {{ _t('settings.fever_key_not_available') }}
+        </p>
+        {% endif %}
+    </div>
+</section>

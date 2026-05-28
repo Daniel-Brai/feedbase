@@ -1,0 +1,96 @@
+{% extends "components/form/inputs/_input.html" %} 
+
+{% block input %}
+<div
+    class="fb-input-icon-wrap fb-w-full"
+    x-data="{
+        isOpen: false,
+        hoveredOption: null,
+        selectedValue: '{{ APP_LOCALE() }}',
+        options: [
+            {% for option in field.options %}
+            {% set option_value = option.value if option is mapping else option[0] %}
+            {% set option_text = option.text if option is mapping else option[1] %}
+            {% set option_title = option.title if option is mapping else '' %}
+            { value: '{{ option_value }}', text: '{{ option_text }}', title: '{{ option_title }}' }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ],
+        get selectedText() {
+            const opt = this.options.find(o => o.value === this.selectedValue);
+            return opt ? opt.text : '';
+        },
+        selectValue(val) {
+            this.selectedValue = val;
+            this.hoveredOption = null;
+            this.isOpen = false;
+            let form = $el.closest('form');
+            if (form) {
+                const btn = form.querySelector('button[type=\'submit\'], input[type=\'submit\']');
+                if (btn) {
+                    setTimeout(() => btn.click(), 10);
+                }
+            }
+        }
+    }"
+    @click.outside="isOpen = false"
+    @htmx:after-request.camel.window="
+        let form = $el.closest('form');
+        if (form && $event.target === form && $event.detail.successful) {
+            window.location.reload();
+        }
+    "
+>
+    <input
+        type="hidden"
+        name="{{ field.name }}"
+        x-model="selectedValue"
+        {% if field.required %}required{% endif %}
+        {% if field.disabled %}disabled{% endif %}
+    />
+
+    <button
+        type="button"
+        class="fb-input fb-flex fb-items-center fb-justify-between fb-cursor-pointer {% if field.css %}{{ field.css }}{% endif %}"
+        @click="isOpen = !isOpen"
+        :aria-expanded="isOpen"
+    >
+        <div class="fb-flex fb-items-center fb-gap-2 fb-mr-3">
+            <i class="f7-icons fb-text-accent fb-text-lg">globe</i>
+            <span x-text="selectedText"></span>
+        </div>
+        <i class="f7-icons fb-text-muted fb-text-sm" x-show="!isOpen"
+            >chevron_down</i
+        >
+        <i class="f7-icons fb-text-muted fb-text-sm" x-cloak x-show="isOpen"
+            >chevron_up</i
+        >
+    </button>
+
+    <div
+        x-show="isOpen"
+        x-cloak
+        x-transition.opacity
+        class="fb-bg-surface fb-border fb-border-border fb-rounded-sm fb-overflow-hidden fb-mt-1 fb-w-full"
+        style="position: absolute; z-index: 50; top: 100%; left: 0"
+    >
+        <template x-for="option in options" :key="option.value">
+            <button
+                type="button"
+                class="fb-flex fb-w-full fb-cursor-pointer fb-items-center fb-p-2 fb-font-mono"
+                style="border: none; background: transparent"
+                :title="option.title"
+                :class="{
+                    'fb-bg-surface2 fb-text-accent': selectedValue === option.value, 
+                    'fb-bg-surface2': hoveredOption === option.value && selectedValue !== option.value,
+                    'fb-text-text': selectedValue !== option.value
+                }"
+                @mouseenter="hoveredOption = option.value"
+                @mouseleave="hoveredOption = null"
+                @click="selectValue(option.value)"
+            >
+                <span x-text="option.text"></span>
+            </button>
+        </template>
+    </div>
+</div>
+{% endblock %}

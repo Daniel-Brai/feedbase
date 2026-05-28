@@ -1,0 +1,30 @@
+<div class="fb-field">
+  <div class="fb-toggle-wrap">
+    <input
+      type="hidden"
+      name="{{ field.name }}"
+      value="{% if field.value == true or field.value == 'true' or field.value is true or field.value == 1 or field.value == '1' or field.value == 'on' or field.value == 'yes' %}true{% else %}false{% endif %}"
+    />
+    <input
+      type="checkbox"
+      class="fb-toggle {% if field.css %}{{ field.css }}{% endif %}"
+      role="switch"
+      {% if field.value == true or field.value == 'true' or field.value is true or field.value == 1 or field.value == '1' or field.value == 'on' or field.value == 'yes' %}checked{% endif %}
+      {% if field.disabled %}disabled{% endif %}
+      {% if field.required %}required{% endif %}
+      {% if field.auto_submit_on_change %}data-auto-submit-on-change="true"{% endif %}
+      {% if 'data-enable-on-changed-value' in field %}
+      data-enable-on-changed-value="{{ field['data-enable-on-changed-value'] }}"
+      {% endif %}
+      onchange="this.previousElementSibling.value = this.checked ? 'true' : 'false'"
+    />
+    <div>
+      <div class="fb-toggle-label">
+        {{ field.label | default('') }}
+        {% if field.required %}<span class="fb-label-required" title="Required field">*</span>{% endif %}
+      </div>
+      {% if field.help_text %}<div class="fb-check-hint">{{ field.help_text }}</div>{% endif %}
+    </div>
+  </div>
+  <div id="{{ field.name }}-error" class="fb-field-error"></div>
+</div>

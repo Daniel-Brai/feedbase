@@ -1,0 +1,119 @@
+{# typja:var data: dict[str, Any] #}
+
+<div class="fb-pane fb-reader-empty-pane">
+    <div class="fb-pane-header" style="min-height: 50px">
+        <div class="fb-flex fb-items-center fb-gap-2 fb-reader-header-left">
+            <button
+                type="button"
+                class="fb-pane-back-btn fb-flex fb-items-center fb-gap-2"
+                @click.stop.prevent="$dispatch('switch-pane', 1)"
+            >
+                <i class="f7-icons">chevron_left</i>
+                <span
+                    class="fb-text-sm2 fb-font-medium"
+                    style="letter-spacing: 0.04em; color: var(--text)"
+                >
+                    {{ _t('articles.reader.title') }}
+                </span>
+            </button>
+        </div>
+
+        <div class="fb-flex fb-items-center fb-gap-2 fb-pane-actions">
+            <div id="reader-open-original-link" hidden>
+                <a
+                    class="fb-btn fb-btn-ghost fb-flex fb-items-center fb-gap-2"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="{{ _t('keyboard_shortcuts.actions.open_original_url') }}"
+                >
+                    <i class="f7-icons">arrow_up_right</i>
+                    <span>
+                        {{ _t('keyboard_shortcuts.actions.open_original_url') }}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="fb-reader-empty" id="reader-empty">
+        <img
+            src="{{ asset('images/svgs/primary-32x32.svg') }}"
+            alt="{{ _t('articles.reader.title') }}"
+            class="fb-reader-empty-logo"
+            width="32"
+            height="32"
+        />
+
+        <div class="fb-reader-empty-text">
+            {{ _t('articles.reader.empty.select_article') }}
+        </div>
+
+        <div class="fb-reader-empty-hint">
+            {{ _t('articles.reader.empty.hint_prefix') }}
+            <kbd>j</kbd> / <kbd>k</kbd> {{
+            _t('articles.reader.empty.hint_navigate') }} · <kbd>?</kbd>
+            {{ _t('articles.reader.empty.hint_shortcuts') }}
+        </div>
+    </div>
+
+    <div class="fb-reader-article" id="reader-content" hidden></div>
+
+    <div id="reader-annotation-toolbar" class="fb-annotation-toolbar" hidden>
+        <button
+            id="reader-annotation-show-btn"
+            type="button"
+            class="fb-btn fb-btn-ghost fb-annotation-toggle-btn"
+            aria-pressed="false"
+            data-annotation-off-title="{{ _t('articles.reader.annotations.show') }}"
+            data-annotation-on-title="{{ _t('articles.reader.annotations.hide') }}"
+            title="{{ _t('articles.reader.annotations.show') }}"
+        >
+            <i class="f7-icons">eye</i>
+        </button>
+
+        <button
+            id="reader-annotation-mode-btn"
+            type="button"
+            class="fb-btn fb-btn-ghost fb-annotation-toggle-btn"
+            aria-pressed="false"
+            data-annotation-mode-off-title="{{ _t('articles.reader.annotations.annotate') }}"
+            data-annotation-mode-on-title="{{ _t('articles.reader.annotations.annotating') }}"
+            title="{{ _t('articles.reader.annotations.annotate') }}"
+        >
+            <i class="f7-icons">pencil</i>
+        </button>
+
+        <div
+            id="reader-annotation-count"
+            class="fb-annotation-count fb-text-sm fb-text-surface"
+            data-count="0"
+            hidden
+        ></div>
+    </div>
+
+    <script id="article-pane-translations-config" type="application/json">
+        {
+            "createHighlightTitle": "{{ _t('articles.reader.annotations.create_title') }}",
+            "notePlaceholder": "{{ _t('articles.reader.annotations.note_placeholder') }}",
+            "cancelButton": "{{ _t('articles.reader.annotations.cancel') }}",
+            "highlightButton": "{{ _t('articles.reader.annotations.save') }}",
+            "saveButton": "{{ _t('articles.reader.annotations.save') }}",
+            "editButton": "{{ _t('articles.reader.annotations.edit') }}",
+            "selectedText": "{{ _t('articles.reader.annotations.selected_text') }}",
+            "noNote": "{{ _t('articles.reader.annotations.no_note') }}",
+            "deleteButton": "{{ _t('articles.reader.annotations.delete') }}",
+            "closeButton": "{{ _t('articles.reader.annotations.close') }}",
+            "copyButtonLabel": "{{ _t('articles.reader.annotations.copy.copy_code') }}",
+            "copyButtonCopied": "{{ _t('articles.reader.annotations.copy.copied') }}",
+            "copyButtonFailed": "{{ _t('articles.reader.annotations.copy.copy_failed') }}",
+            "copySuccessMessage": "{{ _t('articles.reader.annotations.copy.code_copied_to_clipboard') }}"
+        }
+    </script>
+    <script>
+        window.ArticlePaneTranslations = JSON.parse(
+            document.getElementById("article-pane-translations-config")
+                .textContent,
+        );
+    </script>
+</div>

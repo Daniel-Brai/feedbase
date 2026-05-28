@@ -1,0 +1,13 @@
+<opml version="2.0">
+  <body>
+    <outline text="Top Level">
+      <outline text="News">
+        <outline text="Daily News" type="rss" xmlUrl="https://example.org/news.xml" title="News Feed" htmlUrl="https://news.example.org" />
+      </outline>
+      <outline text="Tech">
+        <outline text="Tech Talks" type="rss" xmlUrl="https://example.org/tech.xml" title="Tech Feed" />
+      </outline>
+    </outline>
+    <outline text="Root Feed" type="rss" xmlUrl="https://example.org/root.xml" />
+  </body>
+</opml>

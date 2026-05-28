@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+
+from bootstrap.jobs import configure_jobs
+from lib.logger import get_logger
+from settings import settings
+
+configure_jobs()
+
+
+logger = get_logger("bin.run_worker")
+
+
+def main():
+
+    from lib.jobs import get_adapter, get_adapter_name, get_job_queues
+
+    adapter_name = get_adapter_name()
+
+    if adapter_name != "celery":
+        logger.error(
+            f"Current job adapter is '{adapter_name}'. run_worker is only needed for the 'celery' adapter."
+        )
+        sys.exit(1)
+
+    adapter = get_adapter()
+
+    celery_app = adapter.start()
+
+    celery_app.start(
+        [
+            "worker",
+            "--loglevel=info",
+            f'--queues={",".join(get_job_queues())}',
+            f"--concurrency={settings.CELERY_CONCURRENCY}",
+        ]
+    )
+
+
+if __name__ == "__main__":
+    main()
+
+

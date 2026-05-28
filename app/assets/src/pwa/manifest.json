@@ -1,0 +1,36 @@
+{
+  "short_name": "Feedbase",
+  "name": "Feedbase",
+  "description": "Feedbase is a self-hosted RSS feed reader built for power users.",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/images/pwa/badge-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "monochrome"
+    },
+    {
+      "src": "/static/images/pwa/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/auth/login",
+  "display": "standalone",
+  "theme_color": "#0e0e0e",
+  "background_color": "#0e0e0e"
+}

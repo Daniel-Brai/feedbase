@@ -1,0 +1,186 @@
+{# typja:var subscriptions_url: str, notification_stream_url: str #} {#
+typja:var edit_folder_form_url: str, delete_folder_form_url: str #} {# typja:var
+rename_subscription_form_url: str, subscription_delete_url: str #} {# typja:var
+_t: Callable[[str], str] #}
+
+<div id="subscriptions-list-container">
+    <div
+        id="subscriptions"
+        hx-ext="pagination"
+        pagination-url="{{ subscriptions_url }}"
+        pagination-mode="cursor"
+        pagination-limit-param="size"
+        pagination-limit="10"
+        pagination-cursor-field="metadata.next_page"
+        pagination-has-more-field="metadata.next_page"
+        pagination-append-mode="append"
+        pagination-item-key="name"
+        pagination-template="subscriptions-tpl"
+        pagination-error-template="subscriptions-error-tpl"
+        pagination-empty-template="subscriptions-empty-tpl"
+        pagination-infinite="true"
+        pagination-threshold="0.2"
+        pagination-refresh-stream="{{ notification_stream_url }}"
+        pagination-refresh-stream-with-credentials="true"
+        pagination-refresh-stream-event-transformer="window.PaginationUtils.transformToPaginationStream"
+        pagination-refresh-stream-shared="true"
+    >
+        <div class="subscriptions-list" pagination-list></div>
+        <div
+            class="fb-flex fb-items-center fb-justify-center"
+            pagination-loading-indicator
+        >
+            {{ render_block("components/loading-indicator/loading-indicator.html", type="minimal") }}
+        </div>
+    </div>
+
+    <template id="subscriptions-tpl">
+        <div
+            class="fb-sidebar-folder fb-rounded fb-mb-2"
+            data-folder-id="[[id]]"
+            x-data="{ open: false }"
+        >
+            <div
+                class="fb-sidebar-folder-header fb-flex fb-items-center fb-justify-between fb-p-3 fb-cursor-pointer"
+                @click="open = !open"
+            >
+                <span class="fb-flex fb-items-center fb-gap-2">
+                    <i
+                        class="f7-icons fb-sidebar-folder-toggle fb-text-muted fb-text-lg"
+                        x-text="open ? 'chevron_down' : 'chevron_right'"
+                    ></i>
+                    <i class="f7-icons fb-text-lg fb-text-muted"
+                        >folder[[#if feeds.length]]_fill[[/if]]</i
+                    >
+                    <span
+                        class="fb-font-medium fb-text-muted fb-text-sm2"
+                        style="letter-spacing: 0.02em"
+                        >[[name]]</span
+                    >
+                </span>
+                <span class="fb-flex fb-items-center fb-gap-2">
+                    <span
+                        class="fb-sidebar-item-badge fb-bg-border fb-text-muted"
+                        >[[feeds.length]]</span
+                    >
+                    [[#if id]]
+                    <button
+                        type="button"
+                        class="fb-sidebar-folder-menu-btn"
+                        title="{{ _t('sidebar.folder_actions') }}"
+                        x-data="window.FolderActions(
+                            '[[id]]', 
+                            '{{ edit_folder_form_url }}', 
+                            '{{ delete_folder_form_url }}', 
+                            '[[name]]', 
+                            '{{ _t('sidebar.rename_folder') }}', 
+                            '{{ _t('sidebar.delete_folder') }}'
+                        )"
+                        @click.stop.prevent="showActions($el)"
+                    >
+                        <i class="f7-icons">ellipsis_vertical</i>
+                    </button>
+                    [[/if]]
+                </span>
+            </div>
+            <div class="fb-sidebar-folder-feeds" x-show="open" x-transition>
+                [[#each feeds]]
+                <div
+                    class="fb-sidebar-feed-item fb-w-full fb-flex fb-items-center fb-justify-between fb-pl-4 fb-pr-4 fb-pt-2 fb-cursor-pointer"
+                >
+                    <span class="fb-flex fb-items-center fb-gap-3">
+                        <span
+                            class="fb-sidebar-status-dot fb-[[status]]"
+                            title="[[status]]"
+                        ></span>
+                        <span class="fb-text-sm2 fb-text-muted">[[name]]</span>
+                    </span>
+                    <button
+                        type="button"
+                        class="fb-sidebar-feed-menu-btn"
+                        title="{{ _t('sidebar.feed_actions') }}"
+                        x-data='window.FeedActions(
+                            "[[url]]", 
+                            "[[id]]", 
+                            "[[name]]", 
+                            "{{ rename_subscription_form_url }}", 
+                            "{{ folders_url }}", 
+                            "{{ subscription_delete_url }}", 
+                            "{{ subscription_update_url }}", 
+                            "{{ _t("sidebar.unsubscribe_success") }}", 
+                            "{{ _t("sidebar.unsubscribe_error") }}", 
+                            "{{ _t("sidebar.move_to_folder_success") }}", 
+                            "{{ _t("sidebar.move_to_folder_error") }}", 
+                            "{{ _t("sidebar.move_to_folder") }}", 
+                            "{{ _t("sidebar.rename_subscription") }}", 
+                            "{{ _t("sidebar.copy_feed_url") }}",    
+                            "{{ _t("sidebar.open_feed_url") }}", 
+                            "{{ _t("sidebar.unsubscribe") }}", 
+                            "{{ _t("sidebar.rename_feed") }}", 
+                            "{{ _t("sidebar.copy_feed_url_success") }}", 
+                            "{{ _t("sidebar.copy_feed_url_error") }}"
+                        )'
+                        @click.stop.prevent="showActions($el)"
+                    >
+                        <i class="f7-icons fb-text-lg">ellipsis</i>
+                    </button>
+                </div>
+                [[/each]]
+            </div>
+        </div>
+    </template>
+
+    <template id="subscriptions-empty-tpl">
+        <div
+            class="fb-sidebar-empty-state fb-p-4 fb-mt-4 fb-flex fb-flex-col fb-items-center fb-gap-2 fb-text-muted"
+        >
+            <i class="f7-icons fb-text-amber fb-text-lg">logo_rss</i>
+            <p class="fb-text-center fb-font-medium fb-text-sm">
+                {{ _t('sidebar.no_subscriptions') }}
+            </p>
+            <p class="fb-text-center fb-text-muted fb-text-sm">
+                {{ _t('sidebar.add_feed') }}
+            </p>
+            <button
+                type="button"
+                class="fb-btn fb-btn-dashed-primary fb-mt-3"
+                @click="document.getElementById('discover-feed-form-retrieve-btn')?.click()"
+            >
+                <i class="f7-icons">plus_circle</i>
+                {{ _t('forms.discover.add_feed_btn') }}
+            </button>
+        </div>
+    </template>
+
+    <template id="subscriptions-error-tpl">
+        <div
+            class="fb-sidebar-error-state fb-p-4 fb-mt-4 fb-flex fb-flex-col fb-items-center fb-text-text fb-gap-3"
+        >
+            <div
+                class="fb-flex fb-flex-col fb-items-center fb-gap-2 fb-text-sm"
+            >
+                <i class="f7-icons fb-text-red fb-text-lg"
+                    >exclamationmark_triangle</i
+                >
+                <span class="fb-font-medium fb-text-sm"
+                    >{{ _t('sidebar.error') }}</span
+                >
+                <p class="fb-text-center fb-text-muted fb-text-sm">
+                    {{ _t('sidebar.error_loading_subscriptions') }}
+                </p>
+            </div>
+            <button
+                type="button"
+                class="fb-btn fb-btn-dashed-primary fb-mt-2"
+                @click="
+                    htmx.pagination
+                        .getInstance(document.getElementById('subscriptions'))
+                        .reload()
+                "
+            >
+                <i class="f7-icons">arrow_clockwise</i>
+                {{ _t('sidebar.retry') }}
+            </button>
+        </div>
+    </template>
+</div>

@@ -1,0 +1,73 @@
+{% extends "components/form/inputs/_input.html" %} 
+
+{% block input %}
+<div
+    x-data='{
+      open: false,
+      selectedValue: {{ field.value | tojson | default('""') }},
+      placeholder: {{ field.options_placeholder | tojson | default('""') }},
+      options: {{ field.options | tojson }},
+      get computedOptions() {
+        return this.options.map((option) => {
+          return Array.isArray(option)
+            ? { value: option[0], text: option[1] }
+            : { value: option.value, text: option.text };
+        });
+      },
+      get selectedText() {
+        const option = this.computedOptions.find((opt) => opt.value === this.selectedValue);
+        return option ? option.text : this.placeholder || "";
+      },
+      setValue(value) {
+        this.selectedValue = value;
+        this.open = false;
+        if (this.$refs.hiddenInput) {
+            this.$refs.hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      },
+    }'
+    class="fb-relative"
+    @keydown.escape.window="open = false"
+    @click.away="open = false"
+>
+    <input
+        id="{{ form.name }}-{{ field.name }}"
+        type="hidden"
+        name="{{ field.name }}"
+        x-ref="hiddenInput"
+        x-model="selectedValue"
+        {% if field.auto_submit_on_change %}data-auto-submit-on-change="true"{% endif %}
+        {% if field.required %}required{% endif %}
+    />
+
+    <button
+        type="button"
+        class="fb-input {% if field.css %}{{ field.css }}{% endif %} fb-flex fb-items-center fb-justify-between"
+        @click="open = !open"
+        aria-haspopup="listbox"
+        :aria-expanded="open.toString()"
+        {% if field.disabled %}disabled{% endif %}
+    >
+        <span x-text="selectedText || placeholder"></span>
+        <span class="fb-text-muted">▾</span>
+    </button>
+
+    <div
+        x-show="open"
+        x-cloak
+        class="fb-absolute fb-left-0 fb-right-0 fb-z-50 fb-mt-1 fb-bg-surface fb-border fb-border-border fb-rounded-lg"
+        style="max-height: 220px; overflow-y: auto;"
+    >
+        <template x-for="option in computedOptions" :key="option.value">
+            <button
+                type="button"
+                class="fb-w-full fb-text-left fb-px-3 fb-py-2 fb-border-0 fb-bg-transparent fb-select-option"
+                :class="selectedValue === option.value ? 'fb-bg-accent fb-text-bg' : 'fb-text-text'"
+                @click="setValue(option.value)"
+            >
+                <span x-text="option.text"></span>
+            </button>
+        </template>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{# typja:var _t: Callable[[str], str] #}
+
+<div class="fb-mob-tab-bar">
+    <button
+        type="button"
+        class="fb-mob-tab-btn"
+        :class="{ 'active': mobPane === 0 }"
+        @click="mobPane = 0"
+    >
+        <i class="f7-icons">square_list</i>
+        <span>{{ _t("appbar.feeds") }}</span>
+        <span
+            class="fb-mob-tab-badge"
+            x-show="unread > 0"
+            x-text="unread"
+        ></span>
+    </button>
+
+    <button
+        type="button"
+        class="fb-mob-tab-btn"
+        :class="{ 'active': mobPane === 1 }"
+        @click="mobPane = 1"
+    >
+        <i class="f7-icons">doc_text</i>
+        <span>{{ _t("appbar.articles") }}</span>
+    </button>
+
+    <button
+        type="button"
+        class="fb-mob-tab-btn"
+        :class="{ 'active': mobPane === 2 }"
+        @click="mobPane = 2"
+    >
+        <i class="f7-icons">book</i>
+        <span>{{ _t("appbar.reader") }}</span>
+    </button>
+</div>

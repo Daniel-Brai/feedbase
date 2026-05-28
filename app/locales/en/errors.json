@@ -1,0 +1,12 @@
+{
+    "page": {
+        "title": "Error",
+        "status_401": "You need to log in to access this page.",
+        "status_403": "You do not have permission to view this page.",
+        "status_404": "We couldn't find the page you were looking for.",
+        "status_500": "Oops! Something went wrong on our end. Please try again later.",
+        "status_503": "Service unavailable. We are currently undergoing maintenance.",
+        "back_to_home": "Back to Home",
+        "go_back": "Go Back"
+    }
+}

@@ -1,0 +1,37 @@
+{# typja:var login_form: str, change_language_form: str, forgot_password_link: str #} 
+
+{% extends "layouts/root.html" %} 
+
+{% block body %}
+<div class="fb-flex fb-items-center fb-justify-center fb-h-screen fb-w-full">
+    <div class="fb-w-full fb-max-w-lg fb-px-5">
+        <div class="fb-mb-6 fb-flex fb-flex-col fb-items-start">
+            <div class="fb-flex fb-w-full fb-justify-between fb-items-center">
+                {{ render_block("components/logo/logo.html", show_version=false) }}
+                
+                <div class="fb-w-32">
+                    {{ render_block("components/form/form.html", form=change_language_form) }}
+                </div>
+            </div>
+
+            <p class="fb-text-muted fb-font-mono fb-text-sm fb-mt-4 fb-mb-4">
+                {{ _t("auth.login.subtitle") }}
+            </p>
+            <div class="fb-w-full fb-border-t fb-border-surface2"></div>
+        </div>
+
+        {{ render_block("components/form/form.html", form=login_form) }}
+
+        <div class="fb-mt-6 fb-text-center" hx-boost="true">
+            <a
+                href="{{ forgot_password_link }}"
+                preload="mouseover"
+                class="fb-text-muted fb-text-sm"
+                style="text-decoration: none"
+            >
+                {{ _t("auth.login.forgot_password") }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

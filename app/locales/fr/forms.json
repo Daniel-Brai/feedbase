@@ -1,0 +1,121 @@
+{
+  "forms": {
+    "success": "Succès",
+    "error": "Erreur",
+    "labels": {
+      "email": "ADRESSE E-MAIL",
+      "current_password": "MOT DE PASSE ACTUEL",
+      "new_password": "NOUVEAU MOT DE PASSE",
+      "display_name": "NOM D'AFFICHAGE",
+      "username": "NOM D'UTILISATEUR",
+      "bio": "BIO",
+      "select_feeds": "SÉLECTIONNEZ LES FLUX AUXQUELS VOUS SOUHAITEZ VOUS ABONNER",
+      "digest_frequency": "Choisissez la fréquence à laquelle vous souhaitez recevoir les résumés d'articles",
+      "digest_hour": "Choisissez l'heure de la journée à laquelle vous souhaitez recevoir les résumés (0-23)",
+      "mark_unread": "Marquer les articles comme non lus s'ils sont mis à jour après que je les ai lus",
+      "allow_push_notifications": "Autoriser les notifications push pour les nouveaux articles et les mises à jour"
+    },
+    "placeholders": {
+      "new_email": "Entrez votre nouvelle adresse e-mail",
+      "password": "*********",
+      "url": "https://example.com",
+      "folder_name": "Nom du dossier..."
+    },
+    "buttons": {
+      "cancel": "Annuler",
+      "save": "ENREGISTRER",
+      "save_changes": "ENREGISTRER LES MODIFICATIONS"
+    },
+    "login": {
+      "email_label": "ADRESSE E-MAIL",
+      "email_placeholder": "vous@exemple.com",
+      "password_label": "MOT DE PASSE",
+      "password_placeholder": "*********",
+      "sign_in_btn": "SE CONNECTER",
+      "success_title": "Connexion réussie",
+      "success_msg": "Vous avez été connecté avec succès. Redirection..."
+    },
+    "logout": {
+      "submit_btn": "Se déconnecter",
+      "success_title": "Déconnexion réussie",
+      "success_msg": "Vous avez été déconnecté avec succès. Redirection..."
+    },
+    "forgot_password": {
+      "email_label": "ADRESSE E-MAIL",
+      "email_placeholder": "vous@exemple.com",
+      "email_hint": "Saisissez l'e-mail associé à votre compte pour recevoir les instructions de réinitialisation.",
+      "submit_btn": "ENVOYER LES INSTRUCTIONS",
+      "success_title": "Réinitialisation du mot de passe demandée",
+      "success_msg": "Si un compte avec cet e-mail existe, vous recevrez bientôt des instructions de réinitialisation."
+    },
+    "reset_password": {
+      "password_label": "NOUVEAU MOT DE PASSE",
+      "password_placeholder": "*********",
+      "submit_btn": "RÉINITIALISER LE MOT DE PASSE",
+      "success_title": "Réinitialisation réussie",
+      "success_msg": "Votre mot de passe a été réinitialisé avec succès. Redirection..."
+    },
+    "change_language": {
+      "submit_btn": "CHANGER DE LANGUE",
+      "refresh_btn": "RAFRAÎCHIR LA PAGE"
+    },
+    "verify_email": {
+      "success_title": "E-mail vérifié",
+      "success_msg": "Votre e-mail a été vérifié avec succès. Redirection...",
+      "submit_btn": "Vérifier l'e-mail"
+    },
+    "update_avatar": {
+      "submit_btn": "Mettre à jour l'avatar",
+      "success_msg": "Avatar mis à jour avec succès !",
+      "error_msg": "Erreur lors de la mise à jour de l'avatar. Veuillez réessayer."
+    },
+    "update_profile": {
+      "submit_btn": "METTRE À JOUR LE PROFIL",
+      "success_msg": "Profil mis à jour avec succès !",
+      "error_title": "Erreur lors de la mise à jour du profil"
+    },
+    "change_email": {
+      "submit_btn": "Envoyer le lien de modification d'e-mail"
+    },
+    "change_password": {
+      "submit_btn": "METTRE À JOUR LE MOT DE PASSE",
+      "success_msg": "Mot de passe mis à jour avec succès !",
+      "error_title": "Erreur lors de la mise à jour du mot de passe"
+    },
+    "add_folder": {
+      "submit_btn": "Ajouter un dossier"
+    },
+    "edit_folder": {
+      "submit_btn": "Modifier le dossier"
+    },
+    "discover": {
+      "submit_btn": "Découvrir",
+      "error_title": "Erreur lors de la découverte du flux",
+      "heading_subtitle": "Sélectionnez un flux auquel vous abonner",
+      "add_feed_btn": "Ajouter un flux",
+      "no_feeds_found": "Aucun flux trouvé pour cette URL. Essayez une autre source."
+    },
+    "subscribe_to_feed": {
+      "error_title": "Échec de l'abonnement",
+      "submit_btn": "S'abonner",
+      "success_msg": "Vous vous êtes abonné au(x) flux avec succès."
+    },
+    "rename_feed_subscription": {
+      "submit_btn": "Renommer",
+      "success_msg": "Abonnement au flux renommé avec succès !",
+      "error_title": "Erreur lors du renommage de l'abonnement au flux. Veuillez réessayer."
+    },
+    "refresh_feeds": {
+      "title": "Rafraîchir vos flux",
+      "success_msg": "Flux actualisés avec succès !"
+    },
+    "opml": {
+      "import_success": "Import OPML démarré avec succès.",
+      "import_error": "Échec de l'import OPML. Veuillez réessayer."
+    },
+    "update_preferences": {
+      "error_title": "Erreur lors de la mise à jour des préférences",
+      "select_frequency": "Sélectionnez la fréquence du résumé"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+from .triggers.user import USER_SEARCH_TRIGGER, USER_SEARCH_TRIGGER_FUNCTION
+
+__all__ = [
+    "USER_SEARCH_TRIGGER",
+    "USER_SEARCH_TRIGGER_FUNCTION",
+]

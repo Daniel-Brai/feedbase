@@ -1,0 +1,125 @@
+{
+  "forms": {
+    "success": "Success",
+    "error": "Error",
+    "labels": {
+      "email": "EMAIL ADDRESS",
+      "current_password": "CURRENT PASSWORD",
+      "new_password": "NEW PASSWORD",
+      "display_name": "DISPLAY NAME",
+      "username": "USERNAME",
+      "bio": "BIO",
+      "select_feeds": "SELECT THE FEEDS YOU WANT TO SUBSCRIBE TO",
+      "digest_frequency": "Choose how often you'd like to receive article digests",
+      "digest_hour": "Choose the hour of the day you'd like to receive digests (0-23)",
+      "mark_unread": "Mark articles as unread if they are updated after I've read them",
+      "allow_push_notifications": "Allow push notifications for new articles and updates"
+    },
+    "placeholders": {
+      "new_email": "Enter your new email address",
+      "password": "*********",
+      "url": "https://example.com",
+      "folder_name": "Folder name..."
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "SAVE",
+      "save_changes": "SAVE CHANGES"
+    },
+    "login": {
+      "email_label": "EMAIL ADDRESS",
+      "email_placeholder": "you@example.com",
+      "password_label": "PASSWORD",
+      "password_placeholder": "*********",
+      "sign_in_btn": "SIGN IN",
+      "success_title": "Login Successful",
+      "success_msg": "You have been logged in successfully. Redirecting..."
+    },
+    "logout": {
+      "submit_btn": "Sign Out"
+    },
+    "forgot_password": {
+      "email_label": "EMAIL ADDRESS",
+      "email_placeholder": "you@example.com",
+      "email_hint": "Enter the email associated with your account to receive password reset instructions.",
+      "submit_btn": "SEND RESET INSTRUCTIONS",
+      "success_title": "Password Reset Requested",
+      "success_msg": "If an account with that email exists, you will receive password reset instructions shortly."
+    },
+    "reset_password": {
+      "password_label": "NEW PASSWORD",
+      "password_placeholder": "*********",
+      "submit_btn": "RESET PASSWORD",
+      "success_title": "Password Reset Successful",
+      "success_msg": "Your password has been reset successfully. Redirecting..."
+    },
+    "change_language": {
+      "submit_btn": "CHANGE LANGUAGE",
+      "refresh_btn": "REFRESH PAGE"
+    },
+    "verify_email": {
+      "success_title": "Email Verified",
+      "success_msg": "Your email has been verified successfully. Redirecting...",
+      "submit_btn": "Verify Email"
+    },
+    "update_avatar": {
+      "submit_btn": "Update Avatar",
+      "success_msg": "Avatar updated successfully!",
+      "error_msg": "Error updating avatar. Please try again."
+    },
+    "update_profile": {
+      "submit_btn": "UPDATE PROFILE",
+      "success_msg": "Profile updated successfully!",
+      "error_title": "Error updating profile"
+    },
+    "change_email": {
+      "submit_btn": "Send Link For Email Change"
+    },
+    "change_password": {
+      "submit_btn": "UPDATE PASSWORD",
+      "success_msg": "Password updated successfully!",
+      "error_title": "Error updating password"
+    },
+    "add_folder": {
+      "submit_btn": "Add Folder",
+      "success_msg": "Folder added successfully!"
+    },
+    "edit_folder": {
+      "submit_btn": "Edit Folder",
+      "success_msg": "Folder updated successfully!"
+    },
+    "discover": {
+      "submit_btn": "Discover",
+      "error_title": "Error discovering feed",
+      "heading_subtitle": "Select a feed to subscribe to",
+      "add_feed_btn": "Add feed",
+      "no_feeds_found": "No feeds found for that URL. Try another source."
+    },
+    "subscribe_to_feed": {
+      "error_title": "Subscription Failed",
+      "submit_btn": "Subscribe",
+      "success_msg": "You have been subscribed to the feed(s) successfully."
+    },
+    "rename_feed_subscription": {
+      "submit_btn": "Rename",
+      "success_msg": "Feed subscription renamed successfully!",
+      "error_title": "Error renaming feed subscription. Please try again."
+    },
+    "delete_feed_subscription": {
+      "success_msg": "Feed unsubscribed successfully!",
+      "error_msg": "Failed to unsubscribe from feed. Please try again."
+    },
+    "refresh_feeds": {
+      "title": "Refresh your feeds",
+      "success_msg": "Feeds refreshed successfully!"
+    },
+    "opml": {
+      "import_success": "OPML import started successfully.",
+      "import_error": "Failed to import OPML. Please try again."
+    },
+    "update_preferences": {
+      "error_title": "Error updating preferences",
+      "select_frequency": "Select digest frequency"
+    }
+  }
+}

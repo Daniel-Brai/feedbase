@@ -1,0 +1,168 @@
+{% extends "components/form/inputs/_input.html" %} 
+
+{% block input %}
+<div
+    x-data="{
+        selectedFiles: [],
+        errorMessage: '',
+        isDragging: false,
+        accept: '{{ field.accept | default('') }}',
+        mode: '{{ field.mode | default('single') }}',
+        autoSubmit: {{ field.auto_submit_on_select | default('false') | lower }},
+        maxSizeRaw: '{{ field.max_size | default('') }}',
+        maxSizeBytes: null,
+        init() {
+            this.maxSizeBytes = this.parseMaxSize(this.maxSizeRaw);
+        },
+        parseMaxSize(value) {
+            if (!value) {
+                return null;
+            }
+
+            const normalized = String(value).trim();
+            const match = normalized.match(/^(\d+(?:\.\d+)?)(?:\s*)(kb|mb|gb)?$/i);
+            if (!match) {
+                return null;
+            }
+
+            const amount = Number(match[1]);
+            const unit = match[2] ? match[2].toLowerCase() : '';
+            if (unit === 'kb') {
+                return amount * 1024;
+            }
+            if (unit === 'mb') {
+                return amount * 1024 * 1024;
+            }
+            if (unit === 'gb') {
+                return amount * 1024 * 1024 * 1024;
+            }
+            return amount;
+        },
+        formatFileNames(files) {
+            if (!files.length) {
+                return this.mode === 'multiple' ? 'No files selected' : 'No file selected';
+            }
+            return Array.from(files).map(file => file.name).join(', ');
+        },
+        formatSize(bytes) {
+            if (bytes === null || bytes === undefined) {
+                return '';
+            }
+            if (bytes < 1024) {
+                return `${bytes} B`;
+            }
+            if (bytes < 1024 * 1024) {
+                return `${(bytes / 1024).toFixed(1)} KB`;
+            }
+            return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+        },
+        validateFiles(files) {
+            if (!files || files.length === 0) {
+                return true;
+            }
+            if (this.maxSizeBytes === null) {
+                return true;
+            }
+            for (const file of files) {
+                if (file.size > this.maxSizeBytes) {
+                    this.errorMessage = `File too large. Maximum file size is ${this.formatSize(this.maxSizeBytes)}.`;
+                    return false;
+                }
+            }
+            return true;
+        },
+        setInputFiles(files) {
+            const dt = new DataTransfer();
+            for (const file of files) {
+                dt.items.add(file);
+            }
+            this.$refs.fileInput.files = dt.files;
+        },
+        handleFiles(files) {
+            this.errorMessage = '';
+            if (!files || files.length === 0) {
+                this.selectedFiles = [];
+                return;
+            }
+
+            const selected = Array.from(files || []);
+            if (this.mode !== 'multiple' && selected.length > 1) {
+                selected.splice(1);
+            }
+
+            if (!this.validateFiles(selected)) {
+                this.selectedFiles = [];
+                return;
+            }
+
+            this.selectedFiles = selected;
+            this.setInputFiles(selected);
+
+            if (this.autoSubmit) {
+                const form = $el.closest('form');
+                if (form) {
+                    form.requestSubmit?.();
+                }
+            }
+        },
+        triggerSelect() {
+            this.$refs.fileInput.click();
+        },
+        onDrop(event) {
+            this.isDragging = false;
+            if (event.dataTransfer?.files?.length) {
+                this.handleFiles(event.dataTransfer.files);
+            }
+        },
+    }"
+    x-init="init()"
+    class="fb-relative"
+>
+    <div
+        class="fb-file-drop-area fb-flex fb-flex-col fb-items-center fb-justify-center fb-gap-3 fb-p-6 fb-rounded-lg fb-border fb-border-border fb-bg-surface fb-text-center fb-cursor-pointer"
+        :class="{ 'fb-border-accent': isDragging }"
+        @dragover.prevent="isDragging = true"
+        @dragleave.prevent="isDragging = false"
+        @drop.prevent="onDrop($event)"
+    >
+        <input
+            x-ref="fileInput"
+            type="file"
+            id="{{ form.name }}-{{ field.name }}"
+            name="{{ field.name }}"
+            style="
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                cursor: pointer;
+                z-index: 2;
+            "
+            {% if field.accept %}accept="{{ field.accept }}"{% endif %}
+            {% if field.mode == 'multiple' %}multiple{% endif %}
+            @change="handleFiles($event.target.files)"
+            @dragover.prevent="isDragging = true"
+            @dragleave.prevent="isDragging = false"
+            @drop.prevent="onDrop($event)"
+            {% if field.required %}required{% endif %}
+            {% if field.disabled %}disabled{% endif%}
+        />
+
+        <i class="f7-icons fb-text-2xl fb-text-accent">cloud_upload</i>
+        <div
+            class="fb-text-base fb-font-medium fb-text-text"
+            x-text="selectedFiles.length ? formatFileNames(selectedFiles) : (mode === 'multiple' ? 'Click or drop files here to import.' : 'Click or drop a file here to import.')"
+        ></div>
+        <div class="fb-text-sm fb-text-muted" x-show="maxSizeBytes">
+            Max size: <span x-text="formatSize(maxSizeBytes)"></span>
+        </div>
+    </div>
+
+    <div
+        x-show="errorMessage"
+        x-text="errorMessage"
+        class="fb-field-error fb-mt-2"
+    ></div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+<div class="fb-field" x-data="{
+  text: '{{ field.value | default('', true) | escape }}',
+  maxLength: {{ field.maxlength | default(5000) }},
+  get remaining() { return this.maxLength - this.text.length; },
+  get isNearLimit() { return this.remaining <= 50; },
+  get isAtLimit() { return this.remaining <= 0; }
+}">
+  {% if field.label %}<label for="{{ form.name }}-{{ field.name }}" class="fb-label">
+      {{ field.label }}
+      {% if field.required %}
+        <span class="fb-label-required" title="Required field">*</span>
+      {% else %}
+        <span class="fb-label-optional">optional</span>{% endif %}
+    </label>
+  {% endif %}
+
+  <textarea
+    id="{{ form.name }}-{{ field.name }}"
+    name="{{ field.name }}"
+    class="fb-textarea {% if field.css %}{{ field.css }}{% endif %}"
+    x-model="text"
+    maxlength="{{ field.maxlength | default(5000) }}"
+    {% if field.placeholder %}placeholder="{{ _t(field.placeholder) }}"{% endif %}
+    {% if field.required %}required{% endif %}
+    {% if field.disabled %}disabled{% endif %}
+    rows="{{ field.rows | default(4) }}"
+    {% if 'hx-post' in field %}
+    hx-post="{{ field['hx-post'] }}"
+    hx-trigger="{{ field['hx-trigger'] }}"
+    hx-target="{{ field['hx-target'] }}"
+    hx-swap="{{ field['hx-swap'] }}"
+    hx-include="{{ field['hx-include'] }}"
+    {% endif %}
+    {% if 'data-enable-on-changed-value' in field %}
+    data-enable-on-changed-value="{{ field['data-enable-on-changed-value'] }}"
+    {% endif %}
+  ></textarea>
+
+  <div class="fb-textarea-footer">
+    <span class="fb-char-count" :class="{
+      'near-limit': isNearLimit && !isAtLimit,
+      'at-limit': isAtLimit
+    }" x-text="remaining"></span>
+    <span class="fb-char-count"> / {{ field.maxlength | default(5000) }}</span>
+  </div>
+
+  <div id="{{ field.name }}-error" class="fb-field-error"></div>
+  {% if field.help_text %}<span class="fb-hint">{{ field.help_text }}</span>{% endif %}
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fetcher Test Feed</title>
+    <link>https://example.org/</link>
+    <description>Feed used for feed fetcher tests</description>
+    <item>
+      <title>Article One</title>
+      <link>https://example.org/article-one</link>
+      <guid>article-one</guid>
+      <pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate>
+      <description>First article description.</description>
+    </item>
+    <item>
+      <title>Article Two</title>
+      <link>https://example.org/article-two</link>
+      <guid>article-two</guid>
+      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
+      <description>Second article description.</description>
+    </item>
+  </channel>
+</rss>

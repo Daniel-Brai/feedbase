@@ -1,0 +1,60 @@
+{# typja:var sidebar: dict[str, Any] #}
+
+<section
+    x-show="activeTab === 'account'"
+    x-cloak
+    class="fb-rounded-lg fb-bg-surface2 fb-p-4 fb-border fb-border-border fb-flex fb-flex-col fb-gap-4 fb-mb-6"
+>
+    <div>
+        <h1 class="fb-text-xl fb-font-medium fb-text-text">
+            {{ _t('settings.account_title') }}
+        </h1>
+        <p class="fb-text-sm fb-text-muted fb-mt-2 fb-mb-4">
+            {{ _t('settings.account_description') }}
+        </p>
+    </div>
+
+    <div
+        class="fb-rounded-lg fb-bg-surface fb-p-4 fb-border fb-border-border fb-mb-4 fb-flex fb-flex-col fb-gap-4"
+    >
+        <div id="update-profile" class="fb-mb-6">
+            <div class="fb-mb-4">
+                <h2 class="fb-text-lg fb-font-medium fb-text-text">
+                    {{ _t('settings.profile_title') }}
+                </h2>
+                <p class="fb-text-sm fb-text-muted fb-mt-2">
+                    {{ _t('settings.profile_description') }}
+                </p>
+            </div>
+            {{ render_block("components/form/form.html", form=sidebar.forms.update_profile_form, use_cls=True) }}
+        </div>
+
+        <div class="fb-border-t fb-border-border fb-mt-6 fb-mb-6"></div>
+
+        <div id="change-email" class="fb-mb-6">
+            <div class="fb-mb-4">
+                <h2 class="fb-text-lg fb-font-medium fb-text-text">
+                    {{ _t('settings.change_email_title') }}
+                </h2>
+                <p class="fb-text-sm fb-text-muted fb-mt-2">
+                    {{ _t('settings.change_email_description') }}
+                </p>
+            </div>
+            {{ render_block("components/form/form.html", form=sidebar.forms.change_email_form, use_cls=True) }}
+        </div>
+
+        <div class="fb-border-t fb-border-border fb-mt-6 fb-mb-6"></div>
+
+        <div id="change-password" class="fb-mb-6">
+            <div class="fb-mb-4">
+                <h2 class="fb-text-lg fb-font-medium fb-text-text">
+                    {{ _t('settings.password_title') }}
+                </h2>
+                <p class="fb-text-sm fb-text-muted fb-mt-2">
+                    {{ _t('settings.password_description') }}
+                </p>
+            </div>
+            {{ render_block("components/form/form.html", form=sidebar.forms.change_password_form) }}
+        </div>
+    </div>
+</section>

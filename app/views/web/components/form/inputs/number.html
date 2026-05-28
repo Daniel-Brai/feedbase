@@ -1,0 +1,28 @@
+{% extends "components/form/inputs/_input.html" %} 
+
+{% block input %}
+<input
+    type="number"
+    id="{{ form.name }}-{{ field.name }}"
+    name="{{ field.name }}"
+    class="fb-input {% if field.css %}{{ field.css }}{% endif %}"
+    {% if field.value is not none %}value="{{ field.value }}"{% endif %}
+    {% if field.placeholder %}placeholder="{{ _t(field.placeholder) }}"{% endif %}
+    {% if field.min is defined %}min="{{ field.min }}"{% endif %}
+    {% if field.max is defined %}max="{{ field.max }}"{% endif %}
+    {% if field.step is defined %}step="{{ field.step }}"{% endif %}
+    {% if field.required %}required{% endif %}
+    {% if field.disabled %}disabled{% endif %}
+    {% if field.auto_submit_on_change %}data-auto-submit-on-change="true"{% endif %}
+    {% if 'hx-post' in field %}
+    hx-post="{{ field['hx-post'] }}"
+    hx-trigger="{{ field['hx-trigger'] }}"
+    hx-target="{{ field['hx-target'] }}"
+    hx-swap="{{ field['hx-swap'] }}"
+    hx-include="{{ field['hx-include'] }}"
+    {% endif %}
+    {% if 'data-enable-on-changed-value' in field %}
+    data-enable-on-changed-value="{{ field['data-enable-on-changed-value'] }}"
+    {% endif %}
+/>
+{% endblock %}

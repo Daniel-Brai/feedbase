@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
+from database import USER_SEARCH_TRIGGER, USER_SEARCH_TRIGGER_FUNCTION
+from lib.database import run_sql
+from settings import settings
+
+if __name__ == "__main__":
+    run_sql(
+        database_url=str(settings.APP_SQLALCHEMY_DATABASE_SYNC_URI),
+        executables=[USER_SEARCH_TRIGGER_FUNCTION.text, USER_SEARCH_TRIGGER.text],
+    )

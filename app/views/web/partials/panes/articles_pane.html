@@ -1,0 +1,84 @@
+{# typja:var notifications: dict[str, str], data: dict[str, Any], _t: Callable[[str], str] #}
+
+<div
+    id="articles-pane"
+    class="fb-article-list-pane-inner"
+    x-data='window.ArticlePane(
+        "{{ data.urls.articles_url }}",
+        "{{ _t("sidebar.all_articles") }}",
+        "{{ data.urls.article_annotations_count_url }}",
+        "{{ data.urls.annotations_url }}",
+        "{{ data.urls.annotations_create_url }}",
+        "{{ data.urls.annotation_update_url }}",
+        "{{ data.urls.annotation_delete_url }}"
+    )'
+    @article-filter.window="onFilter($event.detail)"
+    @pagination:after-load.window="renderRelativeTimes()"
+>
+    <div class="fb-pane-header" :class="{ 'search-active': searchVisible }">
+        <div
+            class="fb-flex fb-items-center fb-gap-2"
+            x-show="!searchVisible"
+            x-cloak
+        >
+            <button
+                type="button"
+                class="fb-pane-back-btn fb-flex fb-items-center fb-gap-2"
+                @click.stop.prevent="$dispatch('switch-pane', 0)"
+                x-cloak
+            >
+                <i class="f7-icons">chevron_left</i>
+            </button>
+            <h1
+                class="fb-text-sm2 fb-font-medium"
+                style="letter-spacing: 0.04em"
+                x-text="title"
+            ></h1>
+        </div>
+
+        <div
+            class="fb-flex fb-items-center fb-gap-2"
+            x-show="searchVisible"
+            x-cloak
+        >
+            <div class="fb-search fb-w-full">
+                <i class="f7-icons">search</i>
+                <input
+                    id="articles-search-input"
+                    x-ref="searchInput"
+                    type="text"
+                    class="fb-input"
+                    placeholder="{{ _t('keyboard_shortcuts.ui.search') }}"
+                    :value="searchQuery"
+                    @input="onSearchInput($event.target.value)"
+                    @keydown.escape="searchVisible = false"
+                />
+                <button
+                    type="button"
+                    class="fb-search-clear"
+                    @click.stop.prevent="clearOrCloseSearch()"
+                    aria-label="Clear search"
+                >
+                    <i class="f7-icons">xmark</i>
+                </button>
+            </div>
+        </div>
+
+        <button
+            id="search-button-icon"
+            type="button"
+            class="fb-btn fb-btn-ghost fb-btn-search fb-flex fb-items-center fb-justify-center fb-gap-2"
+            @click.stop.prevent="toggleSearch()"
+            x-show="!searchVisible"
+            x-cloak
+        >
+            <i class="f7-icons">search</i>
+        </button>
+    </div>
+
+    {{ render_block("partials/lists/articles_list.html",
+        notification_stream_url=notifications.stream_url,
+        articles_url=data.urls.articles_url,
+        article_status_update_url=data.urls.article_status_update_url) 
+    }}
+</div>

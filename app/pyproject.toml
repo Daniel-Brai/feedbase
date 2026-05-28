@@ -1,0 +1,164 @@
+[project]
+name = "feedbase"
+version = "0.1.0a1"
+description = "A Self-Hosted RSS Feed Reader designed for power users"
+authors = [
+    { name = "Daniel Brai", email = "danielbrai.dev@gmail.com" }
+]
+requires-python = ">=3.13"
+license = "MIT" 
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Framework :: FastAPI",
+    "Environment :: Web Environment",
+    "Operating System :: POSIX :: Linux",
+]
+keywords = [
+    "rss",
+    "feed-reader",
+    "fastapi",
+    "htmx",
+    "self-hosted",
+]
+dependencies = [
+    "apscheduler>=3.11.2",
+    "asgi-correlation-id>=4.3.4",
+    "asyncpg>=0.31.0",
+    "celery-types>=0.25.0",
+    "celery[redis]>=5.6.2",
+    "redis==6.4.0",
+    "fastapi[all]>=0.135.1",
+    "fastapi-filter[sqlalchemy]>=2.0.1",
+    "fastapi-pagination[sqlalchemy]>=0.15.10",
+    "fastapi-problem>=0.12.1",
+    "inflection>=0.5.1",
+    "psycopg[binary]>=3.3.3",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.13.1",
+    "sqlalchemy>=2.0.48",
+    "sqlalchemy-file>=0.6.0",
+    "sqlmodel>=0.0.37",
+    "structlog>=25.5.0",
+    "httpx>=0.28.1",
+    "mjml>=0.12.0",
+    "boto3>=1.42.66",
+    "starlette-async-jinja>=1.13.3",
+    "argon2-cffi>=25.1.0",
+    "alembic>=1.18.4",
+    "pyjwt[crypto]>=2.12.1",
+    "itsdangerous>=2.2.0",
+    "orjson>=3.11.7",
+    "limits>=5.8.0",
+    "google-auth>=2.49.1",
+    "prometheus-fastapi-instrumentator>=7.1.0",
+    "fasteners>=0.20",
+    "pillow>=12.1.1",
+    "coredis>=6.3.0",
+    "feedparser-rs>=0.5.1",
+    "trafilatura>=2.0.0",
+    "sse-starlette>=3.3.4",
+    "pywebpush>=2.3.0",
+    "py-vapid>=1.9.4",
+]
+
+
+[dependency-groups]
+dev = [
+    "git-changelog>=2.7.0",
+    "pre-commit>=4.5.1",
+    "typja>=0.1.3",
+]
+
+perf = ["locust>=2.44.0"]
+
+test = [
+    "coverage>=7.10.2",
+    "factory-boy>=3.3.3",
+    "pytest-xdist[psutil]>=3.8.0",
+    "pytest-asyncio>=1.3.0",
+    "anyio[trio]>=4.13.0",
+    "pytest-benchmark>=5.2.3",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Daniel-Brai/Feedbase"
+Repository = "https://github.com/Daniel-Brai/Feedbase"
+Issues = "https://github.com/Daniel-Brai/Feedbase/issues"
+
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+src_paths = ["app"]
+skip = ["scripts"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+known_first_party = [
+    "dependencies",
+    "bootstrap",
+    "filters",
+    "constants",
+    "lib",
+    "enums",
+    "notifiers",
+    "schemas",
+    "models",
+    "controllers",
+    "database",
+    "forms",
+    "helpers",
+    "jobs",
+    "locales",
+    "repositories",
+    "services",
+    "settings",
+    "tests",
+    "views",
+]
+
+
+[tool.mypy]
+exclude = ["^.*/alembic/", "^./migrations/.*$", "^./.venv/.*$", "^.*/tests/.*$"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG001", # unused arguments in functions
+]
+ignore = [
+    "E501", # line too long, handled by black
+    "E731", # do not assign a lambda expression, use def
+    "B008", # do not perform function calls in argument defaults
+    "W191", # indentation contains tabs
+    "B904", # Allow raising exceptions without from e, for HTTPException
+    "C416", # Allow use of list comprehensions
+    "E402", # module level import not at top of file
+    "E712", # comparison to True should be 'if cond is True:' or 'if cond:'
+]
+
+[tool.coverage.run]
+omit = [
+    "lib/*",
+]
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["."]
+testpaths = ["./tests/"]
+python_files = ["test_*.py"]
+markers = [
+    "integration: requires real database",
+]
