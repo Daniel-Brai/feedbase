@@ -42,7 +42,7 @@ cd feedbase
 docker-compose up
 ```
 
-Visit `http://localhost:5555` in your browser once the containers are up and running. You can log in with the default credentials:
+Visit `http://localhost:80` in your browser once the containers are up and running. You can log in with the default credentials:
 
 - **Name:** `Adminstrator`
 - **Email:** `admin@feedbase.app`
