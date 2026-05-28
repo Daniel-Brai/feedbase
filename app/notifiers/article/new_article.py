@@ -14,7 +14,7 @@ class NewArticleNotification(BaseNotification):
 
     Parameters
     ----------
-    no_of_articles: int
+    articles_count: int
         The number of new articles.
 
     feed_titles: list[str]

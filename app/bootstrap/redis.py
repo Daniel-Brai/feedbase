@@ -7,9 +7,9 @@ from settings import settings
 
 redis_connection_pool = ConnectionPool.from_url(
     str(settings.APP_REDIS_URL),
-    max_connections=30,
-    socket_timeout=5.0,
-    socket_connect_timeout=5.0,
+    max_connections=20,
+    socket_timeout=10.0,
+    socket_connect_timeout=10.0,
     health_check_interval=30,
     retry=Retry(
         backoff=ExponentialWithJitterBackoff(base=1, cap=10),
