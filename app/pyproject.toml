@@ -1,6 +1,6 @@
 [project]
 name = "feedbase"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "A Self-Hosted RSS Feed Reader designed for power users"
 authors = [
     { name = "Daniel Brai", email = "danielbrai.dev@gmail.com" }
