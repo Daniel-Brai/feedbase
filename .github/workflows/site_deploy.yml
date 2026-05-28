@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - install.sh
+      - site/index.html
 
 permissions:
   contents: read
