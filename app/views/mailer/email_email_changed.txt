@@ -1,0 +1,8 @@
+Hello,
+
+Your Feedbase account email was changed from {old_email} to {email}.
+
+If you did not authorize this change, please contact support.
+
+Thanks,
+Feedbase

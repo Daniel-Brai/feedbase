@@ -1,0 +1,11 @@
+Hello,
+
+A request was made to recover your Feedbase account.
+
+Use this link to recover your account:
+{recovery_url}
+
+If you did not request account recovery, ignore this email.
+
+Thanks,
+Feedbase

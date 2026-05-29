@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-preview>Reset your password for {{ APP_NAME }}.</mj-preview>
+    <mj-preview>Recover your Feedbase account with this secure link.</mj-preview>
     <mj-attributes>
       <mj-all font-family="Inter, Arial, sans-serif" color="#e4e4dc" />
       <mj-class name="preheader" color="#646460" font-size="13px" />
@@ -22,23 +22,23 @@
 
     <mj-section padding="40px 16px">
       <mj-column background-color="#1a1a1a" css-class="card" padding="32px">
-        <mj-text css-class="preheader">Reset your password for {{ APP_NAME }}.</mj-text>
+        <mj-text css-class="preheader">Recover your account securely on {{ APP_NAME }}.</mj-text>
         <mj-spacer height="16px" />
         <mj-text font-size="16px" line-height="1.7">Hi {{ name or "there" }},</mj-text>
         <mj-spacer height="16px" />
-        <mj-text font-size="22px" font-weight="700" color="#c8f04a">Reset your password</mj-text>
+        <mj-text font-size="22px" font-weight="700" color="#c8f04a">Account recovery</mj-text>
         <mj-spacer height="16px" />
         <mj-text font-size="16px" line-height="1.7" color="#e4e4dc">
-          Use the button below to reset your Feedbase password now.
+          Use the link below to recover access to your Feedbase account.
         </mj-text>
         <mj-spacer height="24px" />
-        <mj-button href="{{ reset_url }}" css-class="button" align="left">Reset password</mj-button>
+        <mj-button href="{{ recovery_url }}" css-class="button" align="left">Recover account</mj-button>
         <mj-spacer height="24px" />
         <mj-text font-size="14px" line-height="1.7" color="#b0b0a8">
           If the button does not work, copy and paste this link into your browser:
         </mj-text>
         <mj-text font-size="14px" line-height="1.7" color="#e4e4dc">
-          {{ reset_url }}
+          {{ recovery_url }}
         </mj-text>
         <mj-spacer height="24px" />
         <mj-text font-size="16px" line-height="1.7" color="#e4e4dc">
