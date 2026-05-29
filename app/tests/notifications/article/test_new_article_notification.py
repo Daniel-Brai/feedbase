@@ -1,4 +1,5 @@
-from unittest.mock import patch
+from datetime import timedelta
+from unittest.mock import MagicMock, patch
 
 from lib.notifications.transports import WebPushTransport
 from lib.testing import TestNotificationCase, captured_transports
@@ -156,3 +157,30 @@ class TestNewArticleNotification(TestNotificationCase):
         kwargs = mock_later.call_args.kwargs
         self.assertEqual(kwargs["params"]["articles_count"], 5)
         self.assertEqual(kwargs["params"]["feed_titles"], ["HN", "TC"])
+
+    async def test_deliver_later_handles_multiple_recipients(self):
+        from lib.notifications.jobs import DeliverNotificationJob
+
+        recipients = [
+            self.make_recipient(id=1),
+            self.make_recipient(id=2),
+        ]
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
+
+        with patch.object(DeliverNotificationJob, "perform_later") as mock_later:
+            notification.deliver_later(recipients)
+
+        self.assertEqual(mock_later.call_count, 2)
+
+    async def test_set_proxies_timing_options_to_deliver_later(self):
+        from lib.notifications.jobs import DeliverNotificationJob
+
+        recipient = self.make_recipient()
+        notification = self.notification(articles_count=3, feed_titles=["HN"])
+        proxy = MagicMock()
+
+        with patch.object(DeliverNotificationJob, "set", return_value=proxy) as mock_set:
+            notification.set(wait=timedelta(minutes=20)).deliver_later(recipient)
+
+        mock_set.assert_called_once_with(wait=timedelta(minutes=20), wait_until=None)
+        proxy.perform_later.assert_called_once()
