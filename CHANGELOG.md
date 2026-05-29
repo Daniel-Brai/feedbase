@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
-## [0.1.0-alpha.4](https://github.com/Daniel-Brai/feedbase/releases/tag/0.1.0-alpha.4) - 2026-05-29
+## [0.1.0-alpha.5](https://github.com/Daniel-Brai/feedbase/releases/tag/0.1.0-alpha.5) - 2026-05-29
 
-<small>[Compare with 0.1.0-alpha.2](https://github.com/Daniel-Brai/feedbase/compare/0.1.0-alpha.2...0.1.0-alpha.4)</small>
+<small>[Compare with 0.1.0-alpha.2](https://github.com/Daniel-Brai/feedbase/compare/0.1.0-alpha.2...0.1.0-alpha.5)</small>
 
 ### Bug Fixes
 
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Code Refactoring
 
-- Add set options for timed based notifications ([73a7b1b](https://github.com/Daniel-Brai/feedbase/commit/73a7b1b5666de0a0f78d8b0a140362c2e5ee3efc) by Daniel Brai).
+- update notifications `deliver_later` to be optionally proxied to job `deliver_later` via set (#6) ([dc2801f](https://github.com/Daniel-Brai/feedbase/commit/dc2801f7c8fec1597e8bcefa37fb1c9459f887d9) by Daniel Brai).
 - add a helper method for notification testing ([6c9694f](https://github.com/Daniel-Brai/feedbase/commit/6c9694fc2c606f993fa94e922fbdd058c731a90b) by Daniel Brai).
 
 ## [0.1.0-alpha.2](https://github.com/Daniel-Brai/feedbase/releases/tag/0.1.0-alpha.2) - 2026-05-28
