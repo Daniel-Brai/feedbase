@@ -77,6 +77,13 @@ def configure_prometheus(
         name = getattr(metric, "_name", None) or str(metric)
         metrics_registry.register(name, metric)
 
+        if cfg.registry is not None:
+            try:
+                cfg.registry.register(metric)
+            except ValueError as e:
+                if "Collector already registered" not in str(e):
+                    raise
+
     instrumentator_kwargs: dict[str, Any] = {
         "should_group_status_codes": cfg.should_group_status_codes,
         "should_ignore_untemplated": cfg.should_ignore_untemplated,

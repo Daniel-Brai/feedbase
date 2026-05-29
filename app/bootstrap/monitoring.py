@@ -45,7 +45,7 @@ def configure_monitoring(app: FastAPI) -> None:
                 config=PrometheusMetricsConfig(
                     app_name=settings.APP_NAME.lower(),
                     metrics_endpoint=settings.PROMETHEUS_METRICS_URL,
-                    excluded_handlers=["/health", "/ready"],
+                    excluded_handlers=["/health", "/ready", "/metrics"],
                     include_app_name_label=True,
                     custom_metrics=[
                         JOBS_DURATION,
