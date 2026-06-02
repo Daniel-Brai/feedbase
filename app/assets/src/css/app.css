@@ -1453,6 +1453,7 @@ body {
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  min-width: 0;
 }
 
 #articles-list-container {
@@ -1460,17 +1461,10 @@ body {
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  min-width: 0;
   overflow: hidden;
 }
 
-
-.fb-article-card {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  position: relative;
-  z-index: 0;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
 
 .fb-article-card:hover {
   transform: translateY(-1px);
@@ -1507,10 +1501,16 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 320px;
   min-height: 150px;
   padding: 12px 14px;
   background: var(--bg);
   border-bottom: 1px solid var(--border2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .fb-article-card-title-row {
@@ -3672,6 +3672,7 @@ body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }

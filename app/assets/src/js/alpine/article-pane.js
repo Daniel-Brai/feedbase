@@ -800,15 +800,25 @@ export function ArticlePane(
             delete this.annotationSelection.previewWrapper;
         },
 
+        normalizeNestedPreElements(container) {
+            const nestedPres = container.querySelectorAll('pre > pre');
+            nestedPres.forEach((innerPre) => {
+                const outerPre = innerPre.parentNode;
+                while (outerPre.firstChild !== innerPre) {
+                    outerPre.parentNode.insertBefore(outerPre.firstChild, outerPre);
+                }
+                outerPre.parentNode.replaceChild(innerPre, outerPre);
+            });
+        },
+
         attachCodeCopyButtons(contentPane) {
             if (!contentPane) {
                 return;
             }
 
             contentPane.querySelectorAll('pre').forEach((pre) => {
-                if (pre.dataset.copyButtonAttached) {
-                    return;
-                }
+                if (pre.closest('pre') !== pre) return;
+                if (pre.dataset.copyButtonAttached) return;
 
                 pre.style.position = 'relative';
                 const button = document.createElement('button');
@@ -1379,7 +1389,7 @@ export function ArticlePane(
 
             const snippet = document.createElement('div');
             snippet.className = 'fb-text-sm fb-text-muted fb-my-2';
-            snippet.textContent = truncateText(annotation.highlight_text || translations.selectedText || 'Selected text', 140);
+            snippet.textContent = truncateText(annotation.highlight_text || translations.selectedText || 'Selected text', 100);
             snippet.title = annotation.highlight_text || translations.selectedText || 'Selected text';
             body.appendChild(snippet);
 
@@ -1387,6 +1397,8 @@ export function ArticlePane(
             noteContainer.style.marginTop = '14px';
             noteContainer.style.whiteSpace = 'normal';
             noteContainer.style.lineHeight = '1.5';
+            noteContainer.style.maxHeight = '150px';  
+            noteContainer.style.overflowY = 'auto';
 
             const note = document.createElement('p');
             note.className = 'fb-text-sm';
@@ -1685,6 +1697,8 @@ export function ArticlePane(
             }
 
             contentPane.innerHTML = content;
+            this.normalizeNestedPreElements(contentPane);
+            this.getTextNodeIndex(contentPane);
             contentPane.querySelectorAll('img').forEach((img) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'fb-reader-image-wrap';

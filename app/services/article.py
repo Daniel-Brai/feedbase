@@ -45,16 +45,6 @@ class ArticleService(Service):
 
         try:
             query = self.article_repo.query()
-            # query = (
-            #     self.article_repo.query()
-            #     .join(
-            #         FeedSubscription,
-            #         and_(
-            #             FeedSubscription.feed_id == Article.feed_id,
-            #             FeedSubscription.user_id == user_id,
-            #         ),
-            #     )
-            # )
 
             if filter_params and filter_params.statuses and filter_params.statuses.is_read is False:
                 query = query.outerjoin(

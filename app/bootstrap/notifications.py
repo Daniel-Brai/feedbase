@@ -1,5 +1,6 @@
 from lib.notifications import PushSubscriptionKeys, PushSubscriptionService, PushSubscriptionType, VAPIDClaims
 from lib.notifications import configure_notifications as _configure_notifications
+from lib.notifications.emitter import redis_emitter_from_pool
 from settings import settings
 
 
@@ -33,7 +34,7 @@ def configure_notifications():
 
     return _configure_notifications(
         engine=engine,
-        redis_connection_pool=redis_connection_pool,
+        event_emitter=redis_emitter_from_pool(redis_connection_pool),
         vapid_claims=VAPIDClaims(sub=settings.VAPID_CLAIMS_SUBJECT),
         vapid_private_key=open(settings.VAPID_PRIVATE_KEY_PATH, encoding="utf-8").read(),
         push_subscription_pruner=prune_push_subscriptions,
