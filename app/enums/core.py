@@ -59,3 +59,16 @@ class ThrottlerBackend(StrEnum):
     MEMORY = "memory"
     REDIS = "redis"
     NOOP = "noop"
+
+
+class NotificationEventEmitterBackend(StrEnum):
+    """
+    Enumeration for different notification event stream backends.
+
+    Attributes:
+        REDIS (str, "redis"): Represents a Redis-based notification event stream backend.
+        MEMORY (str, "memory"): Represents an in-memory notification event stream backend.
+    """
+
+    REDIS = "redis"
+    MEMORY = "memory"

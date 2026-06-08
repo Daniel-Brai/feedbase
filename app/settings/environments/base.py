@@ -17,7 +17,7 @@ from pydantic import (
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from enums import Environment, JobBackend, MailerBackend, ThrottlerBackend
+from enums import Environment, JobBackend, MailerBackend, NotificationEventEmitterBackend, ThrottlerBackend
 from lib.auth.types import Password
 from lib.validators import validate_bool, validate_list
 
@@ -61,7 +61,7 @@ class Settings(BaseSettings):
 
     APP_NAME: str = "Feedbase"
     APP_DESCRIPTION: str = "A self-hosted RSS Feed reader with a focus on simplicity, speed and privacy."
-    APP_VERSION: str = "0.1.0b.1"
+    APP_VERSION: str = "0.1.0b.3"
 
     @computed_field  # type: ignore[prop-decorator]
     @property
@@ -210,6 +210,8 @@ class Settings(BaseSettings):
     USE_THROTTLER_BACKEND: ThrottlerBackend = ThrottlerBackend.MEMORY
 
     USE_JOB_BACKEND: JobBackend = JobBackend.DATABASE
+
+    USE_NOTIFICATION_EVENT_EMITTER_BACKEND: NotificationEventEmitterBackend = NotificationEventEmitterBackend.MEMORY
 
     CELERY_REDIS_HOST: str = "localhost"
     CELERY_REDIS_PORT: int = 6379

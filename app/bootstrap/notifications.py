@@ -1,6 +1,7 @@
+from enums import NotificationEventEmitterBackend
 from lib.notifications import PushSubscriptionKeys, PushSubscriptionService, PushSubscriptionType, VAPIDClaims
 from lib.notifications import configure_notifications as _configure_notifications
-from lib.notifications.emitter import redis_emitter_from_pool
+from lib.notifications.emitter import redis_emitter_from_url
 from settings import settings
 
 
@@ -12,7 +13,6 @@ def configure_notifications():
     """
 
     from bootstrap.database import engine, get_db
-    from bootstrap.redis import redis_connection_pool
     from models import User
 
     async def load_push_subscriptions(user):
@@ -32,9 +32,22 @@ def configure_notifications():
             svc = PushSubscriptionService(session)
             await svc.prune_expired(user_id=user.id, endpoints=expired_endpoints)
 
+    event_emitter = (
+        redis_emitter_from_url(
+            str(settings.APP_REDIS_URL),
+            max_connections=5,
+            socket_timeout=10.0,
+            socket_connect_timeout=10.0,
+            health_check_interval=30,
+            decode_responses=False,
+        )
+        if settings.USE_NOTIFICATION_EVENT_EMITTER_BACKEND == NotificationEventEmitterBackend.REDIS
+        else None
+    )
+
     return _configure_notifications(
         engine=engine,
-        event_emitter=redis_emitter_from_pool(redis_connection_pool),
+        event_emitter=event_emitter,
         vapid_claims=VAPIDClaims(sub=settings.VAPID_CLAIMS_SUBJECT),
         vapid_private_key=open(settings.VAPID_PRIVATE_KEY_PATH, encoding="utf-8").read(),
         push_subscription_pruner=prune_push_subscriptions,

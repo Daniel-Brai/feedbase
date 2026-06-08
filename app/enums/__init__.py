@@ -1,5 +1,5 @@
 from .article import ArticleAnnotationKind
-from .core import Environment, JobBackend, MailerBackend, ThrottlerBackend
+from .core import Environment, JobBackend, MailerBackend, NotificationEventEmitterBackend, ThrottlerBackend
 from .feed import FeedFetchStatus, FeedFormat, FeedStatus
 from .seo import OGType
 
@@ -13,4 +13,5 @@ __all__ = [
     "OGType",
     "MailerBackend",
     "ThrottlerBackend",
+    "NotificationEventEmitterBackend",
 ]
