@@ -10,7 +10,7 @@ logger = get_logger("lib.notifications.registry")
 
 class NotificationRegistry:
     """
-    Registry for notification‑related configuration and dependencies.
+    Registry for notification related configuration and dependencies.
     """
 
     def __init__(self) -> None:

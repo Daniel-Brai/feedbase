@@ -17,7 +17,7 @@ from pydantic import (
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from enums import Environment, JobBackend, MailerBackend, ThrottlerBackend
+from enums import Environment, JobBackend, MailerBackend, NotificationEventEmitterBackend, ThrottlerBackend
 from lib.auth.types import Password
 from lib.validators import validate_bool, validate_list
 
@@ -210,6 +210,8 @@ class Settings(BaseSettings):
     USE_THROTTLER_BACKEND: ThrottlerBackend = ThrottlerBackend.MEMORY
 
     USE_JOB_BACKEND: JobBackend = JobBackend.DATABASE
+
+    USE_NOTIFICATION_EVENT_EMITTER_BACKEND: NotificationEventEmitterBackend = NotificationEventEmitterBackend.MEMORY
 
     CELERY_REDIS_HOST: str = "localhost"
     CELERY_REDIS_PORT: int = 6379
