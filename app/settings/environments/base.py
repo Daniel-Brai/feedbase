@@ -61,7 +61,7 @@ class Settings(BaseSettings):
 
     APP_NAME: str = "Feedbase"
     APP_DESCRIPTION: str = "A self-hosted RSS Feed reader with a focus on simplicity, speed and privacy."
-    APP_VERSION: str = "0.1.0b.1"
+    APP_VERSION: str = "0.1.0b.3"
 
     @computed_field  # type: ignore[prop-decorator]
     @property
